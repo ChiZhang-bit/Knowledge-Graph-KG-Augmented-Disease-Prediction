@@ -15,6 +15,7 @@ parser.add_argument('--model', type=str, default="Dip-l", required=True, choices
                     help="model")
 parser.add_argument("--hidden_dim", type=int, default=128, help="hidden_dim")
 parser.add_argument('--bi_direction', action="store_true", default=True, help="bi_direction")
+parser.add_argument('--batch_size', type=int, default=16, help="batch_size")
 parser.add_argument('--beta', type=float, default=0.5, help="KG factor in loss")
 parser.add_argument('--lr', type=float, default=1e-4, help="learning rate")
 
@@ -60,7 +61,7 @@ def evaluate(eval_model, dataloader, device):
     return micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1
 
 
-def kg_loss(output, target, model: Dip_l, A, beta):
+def kg_loss(output, target, model: Dip_l, A, beta, batch_size):
     """
     增添的知识图谱关系的loss
     A: 关系邻接矩阵
@@ -84,7 +85,7 @@ def kg_loss(output, target, model: Dip_l, A, beta):
             if A[i, j] == 1:
                 for weight in W_matrix:
                     relationship_loss += torch.norm(weight[i] - weight[j], 2) ** 2
-    total_loss = loss1 + beta * relationship_loss
+    total_loss = loss1 + (beta / batch_size) * relationship_loss  # 这里要除以batch_size
     return total_loss
 
 
@@ -116,11 +117,11 @@ def main():
                       hidden_dim=args.hidden_dim,
                       output_dim=output_dim,
                       bi_direction=args.bi_direction) # 默认为True
-    else: # model: "Dip_c"
+    else:  # model: "Dip_c"
         model = Dip_c(input_dim=input_dim,
                       hidden_dim=args.hidden_dim,
                       output_dim=output_dim,
-                      max_timesteps=10, #这里不知道max_timesteps具体的作用
+                      max_timesteps=10, # 这里不知道max_timesteps具体的作用
                       bi_direction=args.bi_direction) # 默认为True
 
     epoch = 10
@@ -134,7 +135,7 @@ def main():
             output = model(x)
             # loss = loss_fn
             # 这里还需要补充邻接矩阵的信息，之前只使用CrossEntropyLoss
-            loss = kg_loss(output, y, model, A=[1], beta=args.beta)
+            loss = kg_loss(output, y, model, A=[1], beta=args.beta, batch_size=args.batch_size)
             loss.backward()
             optimzer.step()
             total_loss += loss.item()
@@ -153,9 +154,8 @@ def main():
         with open(os.path.join(saved_path, model_name), "wb") as model_file:
             torch.save(model.state_dict(), model_file)
 
-
-    # test:
-    micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1 = evaluate(model, test_loader, device)
-    print(f"micro_p: {micro_precision}, macro_p:{macro_precision}"
-          f"micro_r: {micro_recall}, macro_r:{macro_recall}"
-          f"micro_fi: {micro_f1}, macro_f1:{macro_f1}")
+        # test:
+        micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1 = evaluate(model, test_loader, device)
+        print(f"micro_p: {micro_precision}, macro_p:{macro_precision}"
+              f"micro_r: {micro_recall}, macro_r:{macro_recall}"
+              f"micro_fi: {micro_f1}, macro_f1:{macro_f1}")

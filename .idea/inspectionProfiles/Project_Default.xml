@@ -1,0 +1,67 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPackageRequirementsInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <value>
+          <list size="47">
+            <item index="0" class="java.lang.String" itemvalue="XlsxWriter" />
+            <item index="1" class="java.lang.String" itemvalue="six" />
+            <item index="2" class="java.lang.String" itemvalue="opencv-python" />
+            <item index="3" class="java.lang.String" itemvalue="pdf2image" />
+            <item index="4" class="java.lang.String" itemvalue="numpy" />
+            <item index="5" class="java.lang.String" itemvalue="protobuf" />
+            <item index="6" class="java.lang.String" itemvalue="captum" />
+            <item index="7" class="java.lang.String" itemvalue="jupyterlab_widgets" />
+            <item index="8" class="java.lang.String" itemvalue="scikit-learn" />
+            <item index="9" class="java.lang.String" itemvalue="nltk" />
+            <item index="10" class="java.lang.String" itemvalue="rouge-score" />
+            <item index="11" class="java.lang.String" itemvalue="bert-score" />
+            <item index="12" class="java.lang.String" itemvalue="datasets" />
+            <item index="13" class="java.lang.String" itemvalue="torchvision" />
+            <item index="14" class="java.lang.String" itemvalue="deepdiff" />
+            <item index="15" class="java.lang.String" itemvalue="gputil" />
+            <item index="16" class="java.lang.String" itemvalue="tensorflow" />
+            <item index="17" class="java.lang.String" itemvalue="jupyter" />
+            <item index="18" class="java.lang.String" itemvalue="tenacity" />
+            <item index="19" class="java.lang.String" itemvalue="wandb" />
+            <item index="20" class="java.lang.String" itemvalue="iterative-stratification" />
+            <item index="21" class="java.lang.String" itemvalue="fire" />
+            <item index="22" class="java.lang.String" itemvalue="torchaudio" />
+            <item index="23" class="java.lang.String" itemvalue="ipywidgets" />
+            <item index="24" class="java.lang.String" itemvalue="optuna" />
+            <item index="25" class="java.lang.String" itemvalue="bleurt" />
+            <item index="26" class="java.lang.String" itemvalue="transformers" />
+            <item index="27" class="java.lang.String" itemvalue="tornado" />
+            <item index="28" class="java.lang.String" itemvalue="torch-lr-finder" />
+            <item index="29" class="java.lang.String" itemvalue="tf-slim" />
+            <item index="30" class="java.lang.String" itemvalue="sentence-transformers" />
+            <item index="31" class="java.lang.String" itemvalue="torch" />
+            <item index="32" class="java.lang.String" itemvalue="plotly" />
+            <item index="33" class="java.lang.String" itemvalue="setfit" />
+            <item index="34" class="java.lang.String" itemvalue="pandas" />
+            <item index="35" class="java.lang.String" itemvalue="tqdm" />
+            <item index="36" class="java.lang.String" itemvalue="openai" />
+            <item index="37" class="java.lang.String" itemvalue="evaluate" />
+            <item index="38" class="java.lang.String" itemvalue="en-core-sci-lg" />
+            <item index="39" class="java.lang.String" itemvalue="chardet" />
+            <item index="40" class="java.lang.String" itemvalue="spacy" />
+            <item index="41" class="java.lang.String" itemvalue="nlp" />
+            <item index="42" class="java.lang.String" itemvalue="scispacy" />
+            <item index="43" class="java.lang.String" itemvalue="accelerate" />
+            <item index="44" class="java.lang.String" itemvalue="quickumls" />
+            <item index="45" class="java.lang.String" itemvalue="en-ner-bc5cdr-md" />
+            <item index="46" class="java.lang.String" itemvalue="cchardet" />
+          </list>
+        </value>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N801" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
