@@ -4,14 +4,14 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from sklearn.metrics import precision_score, recall_score, f1_score
+from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 from torch.utils.data import DataLoader, TensorDataset
 from model import Dip_l, Dip_c, Dip_g
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', type=str, default="Dip-l", required=True, choices=["Dip_l", "Dip_g", "Dip_c"],
+parser.add_argument('--model', type=str, default="Dip_l", choices=["Dip_l", "Dip_g", "Dip_c"],
                     help="model")
 parser.add_argument("--hidden_dim", type=int, default=128, help="hidden_dim")
 parser.add_argument('--bi_direction', action="store_true", default=True, help="bi_direction")
@@ -40,25 +40,66 @@ def evaluate(eval_model, dataloader, device):
         for visit, dignose in dataloader:
             visit, dignose = visit.to(device), dignose.to(device)
             outputs = eval_model(visit)
-            pred = outputs.data > 0.5
-            y_label.append(dignose.cpu().numpy())
-            y_pred.append(pred.cpu().numpy())
+            predict = outputs.data > 0.5
+            y_label.extend(dignose.cpu().numpy())  # 放到正确的label中
+            y_pred.extend(predict.cpu().numpy())
 
+    def calc_marco(label, pred):
+        """
+        之前的直接用sklearn里面的average=“macro”是不对的
+        现在针对下面这种 batch_size * diagnoses_size
+        应该先转置，针对每个diagnoses_size计算出acc P R F1, 在直接取平均
+        # y_test = [
+        #     [1, 0, 0, 0, 1, 1, 1, 0],
+        #     [1, 0, 0, 0, 1, 1, 1, 0],
+        #     [1, 0, 0, 0, 1, 1, 1, 0],
+        #     [1, 0, 0, 0, 1, 1, 1, 0],
+        #     [1, 0, 0, 0, 1, 1, 1, 0],
+        # ]
+        # y_pred = [
+        #     [1, 0, 0, 0, 1, 1, 1, 0],
+        #     [1, 0, 0, 0, 1, 1, 1, 0],
+        #     [1, 0, 0, 0, 1, 1, 1, 0],
+        #     [1, 0, 0, 0, 1, 1, 1, 0],
+        #     [1, 0, 0, 0, 1, 1, 1, 0],
+        # ]
+        """
+        y_marco_label = np.array(label).T
+        y_marco_pred = np.array(pred).T
+
+        macro_acc = []
+        macro_precision = []
+        macro_recall = []
+        macro_f1 = []
+
+        for i in range(len(y_marco_pred)):
+            y_pred_i = y_marco_pred[i]  # 第i个疾病的预测
+            y_label_i = y_marco_label[i]  # 第i个疾病的标签
+
+            macro_acc.append(accuracy_score(y_label_i, y_pred_i))
+            macro_precision.append(precision_score(y_label_i, y_pred_i, average="micro"))
+            macro_recall.append(recall_score(y_label_i, y_pred_i, average="micro"))
+            macro_f1.append(f1_score(y_label_i, y_pred_i, average="micro"))
+
+        macro_acc = np.mean(macro_acc)
+        macro_precision = np.mean(macro_precision)
+        macro_recall = np.mean(macro_recall)
+        macro_f1 = np.mean(macro_f1)
+        return macro_acc, macro_precision, macro_recall, macro_f1
+
+    # calc: macro acc precision recall f1
+    macro_acc, macro_precision, macro_recall, macro_f1 = calc_marco(y_label, y_pred)
     # concat
     y_label = np.concatenate(y_label, axis=0)
     y_pred = np.concatenate(y_pred, axis=0)
 
-    # calc: precision, recall, f1
+    # calc: micro acc precision, recall, f1
+    micro_acc = accuracy_score(y_label, y_pred)
     micro_precision = precision_score(y_label, y_pred, average="micro")
-    macro_precision = precision_score(y_label, y_pred, average="macro")
-
     micro_recall = recall_score(y_label, y_pred, average="micro")
-    macro_recall = recall_score(y_label, y_pred, average="macro")
-
     micro_f1 = f1_score(y_label, y_pred, average='micro')
-    macro_f1 = f1_score(y_label, y_pred, average='macro')
 
-    return micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1
+    return micro_acc, macro_acc, micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1
 
 
 def kg_loss(output, target, model: Dip_l, A, beta, batch_size):
@@ -111,18 +152,18 @@ def main():
         model = Dip_l(input_dim=input_dim,
                       hidden_dim=args.hidden_dim,
                       output_dim=output_dim,
-                      bi_direction=args.bi_direction) # 默认为True
+                      bi_direction=args.bi_direction)  # 默认为True
     elif args.model == "Dip_g":
         model = Dip_g(input_dim=input_dim,
                       hidden_dim=args.hidden_dim,
                       output_dim=output_dim,
-                      bi_direction=args.bi_direction) # 默认为True
+                      bi_direction=args.bi_direction)  # 默认为True
     else:  # model: "Dip_c"
         model = Dip_c(input_dim=input_dim,
                       hidden_dim=args.hidden_dim,
                       output_dim=output_dim,
-                      max_timesteps=10, # 这里不知道max_timesteps具体的作用
-                      bi_direction=args.bi_direction) # 默认为True
+                      max_timesteps=10,  # 这里不知道max_timesteps具体的作用
+                      bi_direction=args.bi_direction)  # 默认为True
 
     epoch = 10
     # loss_fn = nn.CrossEntropyLoss()
@@ -144,8 +185,11 @@ def main():
         print(f"Epoch {i}, Average Loss: {avg_loss}")
 
         # eval_model:
-        micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1 = evaluate(model, eval_loader, device)
-        print(f"micro_p: {micro_precision}, macro_p:{macro_precision}"
+        micro_acc, macro_acc, micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1 = \
+            evaluate(model, eval_loader, device)
+        print(f"Eval Result:\n"
+              f"micro_acc: {micro_acc}, macro_p:{macro_acc}"
+              f"micro_p: {micro_precision}, macro_p:{macro_precision}"
               f"micro_r: {micro_recall}, macro_r:{macro_recall}"
               f"micro_fi: {micro_f1}, macro_f1:{macro_f1}")
 
@@ -155,7 +199,68 @@ def main():
             torch.save(model.state_dict(), model_file)
 
         # test:
-        micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1 = evaluate(model, test_loader, device)
-        print(f"micro_p: {micro_precision}, macro_p:{macro_precision}"
+        micro_acc, macro_acc, micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1 = \
+            evaluate(model, test_loader, device)
+        print(f"Test Result:\n"
+              f"micro_acc: {micro_acc}, macro_p:{macro_acc}"
+              f"micro_p: {micro_precision}, macro_p:{macro_precision}"
               f"micro_r: {micro_recall}, macro_r:{macro_recall}"
               f"micro_fi: {micro_f1}, macro_f1:{macro_f1}")
+
+
+# y_test = [0, 0, 1, 0, 1]
+# y_predict = [0, 1, 1, 0, 0]
+#
+# print('准确率:', accuracy_score(y_test, y_predict))  # 预测准确率输出
+#
+# print('宏平均精确率:', precision_score(y_test, y_predict, average='macro'))  # 预测宏平均精确率输出
+# print('微平均精确率:', precision_score(y_test, y_predict, average='micro'))  # 预测微平均精确率输出
+#
+# print('宏平均召回率:', recall_score(y_test, y_predict, average='macro'))  # 预测宏平均召回率输出
+# print('微平均召回率:', recall_score(y_test, y_predict, average='micro'))  # 预测微平均召回率输出
+#
+# print('宏平均F1-score:', f1_score(y_test, y_predict, labels=[0, 1], average='macro'))  # 预测宏平均f1-score输出
+# print('微平均F1-score:', f1_score(y_test, y_predict, labels=[0, 1], average='micro'))  # 预测微平均f1-score输出
+
+# calc macro average:
+# y_test = [
+#     [1, 0, 0, 0, 1, 1, 1, 0],
+#     [1, 0, 0, 0, 1, 1, 1, 0],
+#     [1, 0, 0, 0, 1, 1, 1, 0],
+#     [1, 0, 0, 0, 1, 1, 1, 0],
+#     [1, 0, 0, 0, 1, 1, 1, 0],
+# ]
+# y_pred = [
+#     [1, 0, 0, 0, 1, 1, 1, 0],
+#     [1, 0, 0, 0, 1, 1, 1, 0],
+#     [1, 0, 0, 0, 1, 1, 1, 0],
+#     [1, 0, 0, 0, 1, 1, 1, 0],
+#     [1, 0, 0, 0, 1, 1, 1, 0],
+# ]
+# y_test = np.array(y_test)
+# y_pred = np.array(y_pred)
+#
+# y_marco_label = y_test.T
+# y_marco_pred = y_pred.T
+#
+# print(y_marco_label)
+# print(y_marco_pred)
+#
+# macro_acc = []
+# macro_precision = []
+# macro_recall = []
+# macro_f1 = []
+#
+# for i in range(len(y_marco_pred)):
+#     y_pred_i = y_marco_pred[i]  # 第i个疾病的预测
+#     y_label_i = y_marco_label[i]  # 第i个疾病的标签
+#
+#     macro_acc.append(accuracy_score(y_label_i, y_pred_i))
+#     macro_precision.append(precision_score(y_label_i, y_pred_i, average="micro"))
+#     macro_recall.append(recall_score(y_label_i, y_pred_i, average="micro"))
+#     macro_f1.append(f1_score(y_label_i, y_pred_i, average="micro"))
+#
+# macro_acc = np.mean(macro_acc)
+# macro_precision = np.mean(macro_precision)
+# macro_recall = np.mean(macro_recall)
+# macro_f1 = np.mean(macro_f1)
