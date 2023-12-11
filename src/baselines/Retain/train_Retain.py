@@ -12,7 +12,7 @@ from collections import defaultdict
 
 import sys
 sys.path.append("..")
-from models import Retain
+from retain import Retain
 from util import llprint, multi_label_metric, ddi_rate_score, get_n_params
 
 torch.manual_seed(1203)
