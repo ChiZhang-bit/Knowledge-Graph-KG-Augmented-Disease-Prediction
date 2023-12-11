@@ -8,7 +8,7 @@ from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_sc
 from torch.utils.data import DataLoader
 from Dataset import DiseasePredDataset
 from model import Dip_l, Dip_c, Dip_g
-from utils import llprint
+from utils import llprint, get_accuracy
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
@@ -45,10 +45,12 @@ def evaluate(eval_model, dataloader, device):
             visit, dignose = batch
             visit, dignose = visit.to(device), dignose.to(device)
             outputs = eval_model(visit)
-            predict = outputs.data > 0.5
-            y_label.extend(dignose.cpu().numpy())  # 放到正确的label中
-            y_pred.extend(predict.cpu().numpy())
-            llprint('\rtraining step: {} / {}'.format(idx, len(dataloader)))
+            # get_accuracy(dignose.data.cpu(), outputs.data.cpu())
+            # input()
+            y_label.extend(np.array(dignose.data.cpu()))  # 放到正确的label中
+            y_pred.extend(np.array(outputs.data.cpu()))
+            llprint('\rtest step: {} / {}'.format(idx, len(dataloader)))
+    macro_auc, micro_auc, precision_mean, recall_mean, f1_mean = get_accuracy(y_label, y_pred)
 
     def calc_marco(label, pred):
         """
@@ -93,19 +95,19 @@ def evaluate(eval_model, dataloader, device):
         macro_f1 = np.mean(macro_f1)
         return macro_acc, macro_precision, macro_recall, macro_f1
 
-    # calc: macro acc precision recall f1
-    macro_acc, macro_precision, macro_recall, macro_f1 = calc_marco(y_label, y_pred)
-    # concat
-    y_label = np.concatenate(y_label, axis=0)
-    y_pred = np.concatenate(y_pred, axis=0)
+    # # calc: macro acc precision recall f1
+    # macro_acc, macro_precision, macro_recall, macro_f1 = calc_marco(y_label, y_pred)
+    # # concat
+    # y_label = np.concatenate(y_label, axis=0)
+    # y_pred = np.concatenate(y_pred, axis=0)
 
-    # calc: micro acc precision, recall, f1
-    micro_acc = accuracy_score(y_label, y_pred)
-    micro_precision = precision_score(y_label, y_pred, average="micro")
-    micro_recall = recall_score(y_label, y_pred, average="micro")
-    micro_f1 = f1_score(y_label, y_pred, average='micro')
+    # # calc: micro acc precision, recall, f1
+    # micro_acc = accuracy_score(y_label, y_pred)
+    # micro_precision = precision_score(y_label, y_pred, average="micro")
+    # micro_recall = recall_score(y_label, y_pred, average="micro")
+    # micro_f1 = f1_score(y_label, y_pred, average='micro')
 
-    return micro_acc, macro_acc, micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1
+    return macro_auc, micro_auc, precision_mean, recall_mean, f1_mean
 
 
 def kg_loss(output, target, model: Dip_l, A, beta, batch_size):
@@ -181,8 +183,7 @@ def main():
         model.train()
         for idx, batch in enumerate(train_loader):
             x, y = batch
-            x = x.to(device)
-            y = y.to(device)
+            x, y = x.to(device), y.to(device)
             optimzer.zero_grad()
             output = model(x)
             loss = loss_fn(output, y)
@@ -206,13 +207,12 @@ def main():
         #       f"micro_fi: {micro_f1}, macro_f1:{macro_f1}")
 
         # test:
-        micro_acc, macro_acc, micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1 = \
+        macro_auc, micro_auc, precision_mean, recall_mean, f1_mean = \
             evaluate(model, test_loader, device)
         print(f"\nTest Result:\n"
-              f"\nmicro_acc: {micro_acc}, macro_p:{macro_acc}"
-              f"\nmicro_p: {micro_precision}, macro_p:{macro_precision}"
-              f"\nmicro_r: {micro_recall}, macro_r:{macro_recall}"
-              f"\nmicro_fi: {micro_f1}, macro_f1:{macro_f1}")
+              f"\nmacro_auc:{macro_auc}, micro_auc:{micro_auc}"
+              f"\nprecision_mean:{precision_mean}\nrecall_mean:{recall_mean}\nf1_mean:{f1_mean}")
+        input()
 
         # save_model:
         model_name = f"Epoch_{i}.model"
