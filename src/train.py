@@ -5,19 +5,23 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
-from torch.utils.data import DataLoader, TensorDataset
+from torch.utils.data import DataLoader
+from Dataset import DiseasePredDataset
 from model import Dip_l, Dip_c, Dip_g
+from utils import llprint
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, default="Dip_l", choices=["Dip_l", "Dip_g", "Dip_c"],
                     help="model")
+parser.add_argument("--input_dim", type=int, default=2850, help="input_dim (feature_size)")
 parser.add_argument("--hidden_dim", type=int, default=128, help="hidden_dim")
+parser.add_argument("--output_dim", type=int, default=100, help="output_dim (disease_size)")
 parser.add_argument('--bi_direction', action="store_true", default=True, help="bi_direction")
-parser.add_argument('--batch_size', type=int, default=16, help="batch_size")
+parser.add_argument('--batch_size', type=int, default=8, help="batch_size")
 parser.add_argument('--beta', type=float, default=0.5, help="KG factor in loss")
-parser.add_argument('--lr', type=float, default=1e-4, help="learning rate")
+parser.add_argument('--lr', type=float, default=1e-3, help="learning rate")
 
 args = parser.parse_args()
 
@@ -37,12 +41,14 @@ def evaluate(eval_model, dataloader, device):
     y_pred = []
 
     with torch.no_grad():
-        for visit, dignose in dataloader:
+        for idx, batch in enumerate(dataloader):
+            visit, dignose = batch
             visit, dignose = visit.to(device), dignose.to(device)
             outputs = eval_model(visit)
             predict = outputs.data > 0.5
             y_label.extend(dignose.cpu().numpy())  # 放到正确的label中
             y_pred.extend(predict.cpu().numpy())
+            llprint('\rtraining step: {} / {}'.format(idx, len(dataloader)))
 
     def calc_marco(label, pred):
         """
@@ -133,21 +139,21 @@ def kg_loss(output, target, model: Dip_l, A, beta, batch_size):
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # Load Dataset:
-    features = torch.randn(100, 10)
-    labels = torch.randint(0, 2, (100,))
+    features = torch.load('../data/features_one_hot.pt')
+    labels = torch.load('../data/label_one_hot.pt')
 
-    train_data = TensorDataset(features, labels)
-    train_loader = DataLoader(train_data, batch_size=32, shuffle=True)
+    split_point = int(len(features) * 8 / 10)
+    train_features, train_labels = features[:split_point], labels[:split_point]
+    test_features, test_labels = features[split_point:], labels[split_point:]
 
-    eval_data = TensorDataset(features, labels)
-    eval_loader = DataLoader(eval_data, batch_size=32, shuffle=True)
+    train_data = DiseasePredDataset(train_features, train_labels)
+    test_data = DiseasePredDataset(test_features, test_labels)
 
-    test_data = TensorDataset(features, labels)
-    test_loader = DataLoader(test_data, batch_size=32, shuffle=True)
+    train_loader = DataLoader(train_data, batch_size=args.batch_size, shuffle=True)
+    test_loader = DataLoader(test_data, batch_size=args.batch_size, shuffle=True)
 
-    input_dim = 10  # feature
-    output_dim = 2  # 输出的维度，假设是2分类
+    input_dim = args.input_dim  # feature
+    output_dim = args.output_dim
     if args.model == "Dip_l":
         model = Dip_l(input_dim=input_dim,
                       hidden_dim=args.hidden_dim,
@@ -165,47 +171,53 @@ def main():
                       max_timesteps=10,  # 这里不知道max_timesteps具体的作用
                       bi_direction=args.bi_direction)  # 默认为True
 
-    epoch = 10
-    # loss_fn = nn.CrossEntropyLoss()
+    epoch = 1000
+    loss_fn = nn.CrossEntropyLoss()
     optimzer = optim.Adam(model.parameters(), lr=args.lr)
-    model.train()
+    model = model.to(device)
     for i in range(epoch):
+        print('\nepoch {} --------------------------'.format(i))
         total_loss = 0
-        for x, y in train_loader:
+        model.train()
+        for idx, batch in enumerate(train_loader):
+            x, y = batch
+            x = x.to(device)
+            y = y.to(device)
             optimzer.zero_grad()
             output = model(x)
-            # loss = loss_fn
+            loss = loss_fn(output, y)
             # 这里还需要补充邻接矩阵的信息，之前只使用CrossEntropyLoss
-            loss = kg_loss(output, y, model, A=[1], beta=args.beta, batch_size=args.batch_size)
+            # loss = kg_loss(output, y, model, A=[1], beta=args.beta, batch_size=args.batch_size)
             loss.backward()
             optimzer.step()
+            llprint('\rtraining step: {} / {}'.format(idx, len(train_loader)))
             total_loss += loss.item()
 
         avg_loss = total_loss / len(train_loader)
-        print(f"Epoch {i}, Average Loss: {avg_loss}")
+        print(f"\nEpoch {i}, Average Loss: {avg_loss}")
 
         # eval_model:
+        # micro_acc, macro_acc, micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1 = \
+        #     evaluate(model, eval_loader, device)
+        # print(f"Eval Result:\n"
+        #       f"micro_acc: {micro_acc}, macro_p:{macro_acc}"
+        #       f"micro_p: {micro_precision}, macro_p:{macro_precision}"
+        #       f"micro_r: {micro_recall}, macro_r:{macro_recall}"
+        #       f"micro_fi: {micro_f1}, macro_f1:{macro_f1}")
+
+        # test:
         micro_acc, macro_acc, micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1 = \
-            evaluate(model, eval_loader, device)
-        print(f"Eval Result:\n"
-              f"micro_acc: {micro_acc}, macro_p:{macro_acc}"
-              f"micro_p: {micro_precision}, macro_p:{macro_precision}"
-              f"micro_r: {micro_recall}, macro_r:{macro_recall}"
-              f"micro_fi: {micro_f1}, macro_f1:{macro_f1}")
+            evaluate(model, test_loader, device)
+        print(f"\nTest Result:\n"
+              f"\nmicro_acc: {micro_acc}, macro_p:{macro_acc}"
+              f"\nmicro_p: {micro_precision}, macro_p:{macro_precision}"
+              f"\nmicro_r: {micro_recall}, macro_r:{macro_recall}"
+              f"\nmicro_fi: {micro_f1}, macro_f1:{macro_f1}")
 
         # save_model:
         model_name = f"Epoch_{i}.model"
         with open(os.path.join(saved_path, model_name), "wb") as model_file:
             torch.save(model.state_dict(), model_file)
-
-        # test:
-        micro_acc, macro_acc, micro_precision, macro_precision, micro_recall, macro_recall, micro_f1, macro_f1 = \
-            evaluate(model, test_loader, device)
-        print(f"Test Result:\n"
-              f"micro_acc: {micro_acc}, macro_p:{macro_acc}"
-              f"micro_p: {micro_precision}, macro_p:{macro_precision}"
-              f"micro_r: {micro_recall}, macro_r:{macro_recall}"
-              f"micro_fi: {micro_f1}, macro_f1:{macro_f1}")
 
 
 # y_test = [0, 0, 1, 0, 1]
@@ -264,3 +276,5 @@ def main():
 # macro_precision = np.mean(macro_precision)
 # macro_recall = np.mean(macro_recall)
 # macro_f1 = np.mean(macro_f1)
+
+main()
