@@ -25,6 +25,9 @@ def get_accuracy(y, pred):
     # 删掉那个没有疾病的维度
     y_label = np.delete(y_label, obj=32, axis=1)
     y_pred = np.delete(y_pred, obj=32, axis=1)
+    # print(y_label.sum(axis=0))
+    # print(y_label.sum(axis=0).shape)
+    # input()
     
     # Micro Acc & Macro Acc
     micro_accuracy = roc_auc_score(y_label, y_pred, average="micro")
@@ -34,3 +37,4 @@ def get_accuracy(y, pred):
     recall_mean = recall_score(y_label, y_pred, average="micro")
     f1_mean = f1_score(y_label, y_pred, average="micro")
     return micro_accuracy, macro_accuracy, precision_mean, recall_mean, f1_mean
+

@@ -7,13 +7,13 @@ import torch.optim as optim
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 from torch.utils.data import DataLoader
 from Dataset import DiseasePredDataset, read_data
-from model import Dip_l, Dip_c, Dip_g, Retain, LSTM_Model
+from models import Dip_l, Dip_c, Dip_g, Retain, LSTM_Model
 from utils import llprint, get_accuracy
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', type=str, default="Dip_g", choices=["Dip_l", "Dip_g", "Dip_c", "Retain", "LSTM"],
+parser.add_argument('--model', type=str, default="Retain", choices=["Dip_l", "Dip_g", "Dip_c", "Retain", "LSTM"],
                     help="model")
 parser.add_argument("--input_dim", type=int, default=2850, help="input_dim (feature_size)")
 parser.add_argument("--hidden_dim", type=int, default=128, help="hidden_dim")
@@ -25,8 +25,8 @@ parser.add_argument('--lr', type=float, default=1e-4, help="learning rate")
 
 args = parser.parse_args()
 
-saved_path = "../saved_model/"
-model_name = "Our_model"
+saved_path = "../../saved_model/baseline/"
+model_name = args.model
 path = os.path.join(saved_path, model_name)
 if not os.path.exists(path):
     os.makedirs(path)
@@ -56,49 +56,21 @@ def evaluate(eval_model, dataloader, device):
     avg_loss = total_loss / len(dataloader)
     print(f"\nTest average Loss: {avg_loss}")
     macro_auc, micro_auc, precision_mean, recall_mean, f1_mean = get_accuracy(y_label, y_pred)
-
+    
     return macro_auc, micro_auc, precision_mean, recall_mean, f1_mean
-
-
-def kg_loss(output, target, model, A, beta, batch_size):
-    """
-    增添的知识图谱关系的loss
-    A: 关系邻接矩阵
-    """
-    hidden_size = model.hidden_dim
-    # 先计算原本的交叉熵loss
-    ce_loss = nn.CrossEntropyLoss()
-    loss1 = ce_loss(output, target)
-
-    # RNN层的权重W
-    W = model.rnn.weight_ih_l0  # (3*hidden_size, input_size)
-    W_ir = W[0:hidden_size, :]  # (hidden_size, input_size)
-    W_iz = W[hidden_size:2 * hidden_size, :]
-    W_in = W[2 * hidden_size:3 * hidden_size, :]
-    W_matrix = [W_ir, W_iz, W_in]
-
-    relationship_loss = 0
-    # A: (input_size , input_size) 01matrix
-    for i in range(W_ir.shape[0]):
-        for j in range(i, W_ir.shape[0]):
-            if A[i, j] == 1:
-                for weight in W_matrix:
-                    relationship_loss += torch.norm(weight[i] - weight[j], 2) ** 2
-    total_loss = loss1 + (beta / batch_size) * relationship_loss  # 这里要除以batch_size
-    return total_loss
 
 
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    features, labels = read_data(feature_file="../data/features_one_hot.pt",
-                                 label_file='../data/label_one_hot.pt')
+    features, labels = read_data(feature_file="../../data/features_one_hot.pt",
+                                 label_file='../../data/label_one_hot.pt')
+    
 
     split_train_point = int(len(features) * 6.7 / 10)
     split_test_point = int(len(features) * 8.7 / 10)
     train_features, train_labels = features[:split_train_point], labels[:split_train_point]
-    test_features, test_labels = features[split_train_point:split_test_point], labels[
-                                                                               split_train_point:split_test_point]
+    test_features, test_labels = features[split_train_point:split_test_point], labels[split_train_point:split_test_point]
     valid_features, valid_labels = features[split_test_point:], labels[split_test_point:]
 
     train_data = DiseasePredDataset(train_features, train_labels)
@@ -127,12 +99,18 @@ def main():
                       output_dim=output_dim,
                       max_timesteps=10,  # 这里不知道max_timesteps具体的作用
                       bi_direction=args.bi_direction)  # 默认为True
-    else:  # model: Retain
+    elif args.model == "Retain":  # model: Retain
         model = Retain(
             input_dim=input_dim,
             hidden_dim=args.hidden_dim,
             output_dim=output_dim,
             device=device
+        )
+    else:
+        model = LSTM_Model(
+            input_dim=input_dim,
+            hidden_dim=args.hidden_dim,
+            output_dim=output_dim
         )
 
     epoch = 100
@@ -174,14 +152,14 @@ def main():
         if macro_auc > best_eval_macro_auc:
             best_eval_macro_auc = macro_auc
             best_eval_epoch = i
-
+        
         # test:
         macro_auc, micro_auc, precision_mean, recall_mean, f1_mean = \
             evaluate(model, test_loader, device)
         print(f"\nTest Result:\n"
               f"\nmacro_auc:{macro_auc}, micro_auc:{micro_auc}"
               f"\nprecision_mean:{precision_mean}\nrecall_mean:{recall_mean}\nf1_mean:{f1_mean}")
-
+        
         if macro_auc > best_test_macro_auc:
             best_test_macro_auc = macro_auc
             best_test_epoch = i
@@ -192,6 +170,5 @@ def main():
         #     # torch.save(model.state_dict(), model_file)
     print(f"Best Eval Epoch:{best_eval_epoch}, best_Macro_auc:{best_eval_macro_auc}")
     print(f"Best Test Epoch:{best_test_epoch}, best_Macro_auc:{best_test_macro_auc}")
-
 
 main()
