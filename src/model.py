@@ -167,7 +167,7 @@ class Dip_c(nn.Module):
 
 
 class Retain(nn.Module):
-    def __init__(self, input_dim, output_dim, hidden_dim, bi_direction=False, device=torch.device('cpu:0'),
+    def __init__(self, input_dim, output_dim, hidden_dim, bi_direction=False, device=torch.device('cuda'),
                  activation="sigmoid"):
         super(Retain, self).__init__()
         self.device = device
@@ -221,7 +221,7 @@ class Retain(nn.Module):
         h_li = self.beta_li(h)  # (batch_size, seq_length, bi*input_size)
 
         attn_g = F.softmax(g_li, dim=-1)  # (batch_size, seq_length, 1)
-        attn_h = F.tanh(h_li)  # (batch_size, seq_length, bi*input_size)
+        attn_h = torch.tanh(h_li)  # (batch_size, seq_length, bi*input_size)
 
         c = attn_g * attn_h * (x)  # (batch_size, seq_length, bi*input_size)
         c = torch.sum(c, dim=1)  # (batch_size, bi*input_size)

@@ -1,0 +1,2302 @@
+
+epoch 0 --------------------------
+
+Epoch 0, Average Loss: 26.5115122719115
+
+Test average Loss: 0.4211615348348812
+
+Valid Result:
+
+macro_auc:0.6577729016576982, micro_auc:0.5056399869792159
+precision_mean:0.15588189507550204
+recall_mean:0.5691549829480864
+f1_mean:0.24473501975640555
+
+Test average Loss: 0.2731226094563802
+
+Test Result:
+
+macro_auc:0.6579201966452395, micro_auc:0.5038884035455233
+precision_mean:0.15301192607858374
+recall_mean:0.569685534591195
+f1_mean:0.24123145756211883
+
+
+epoch 1 --------------------------
+
+Epoch 1, Average Loss: 25.97059897692555
+
+Test average Loss: 0.330652548342335
+
+Valid Result:
+
+macro_auc:0.6647565983909162, micro_auc:0.5119667902945777
+precision_mean:0.1581340690782751
+recall_mean:0.5863963622584312
+f1_mean:0.24909456740442656
+
+Test average Loss: 0.19329784393310548
+
+Test Result:
+
+macro_auc:0.6645130220029944, micro_auc:0.5113085516477011
+precision_mean:0.1549763978458879
+recall_mean:0.5864150943396227
+f1_mean:0.2451619688683214
+
+
+epoch 2 --------------------------
+
+Epoch 2, Average Loss: 25.85829864935096
+
+Test average Loss: 0.25780969736527426
+
+Valid Result:
+
+macro_auc:0.674673519176126, micro_auc:0.5277362760170446
+precision_mean:0.17083078292805076
+recall_mean:0.581659719590754
+f1_mean:0.26409738053249604
+
+Test average Loss: 0.19900909423828125
+
+Test Result:
+
+macro_auc:0.6773618122245311, micro_auc:0.5266113321883205
+precision_mean:0.16861387566709937
+recall_mean:0.5881761006289308
+f1_mean:0.2620929320105375
+
+
+epoch 3 --------------------------
+
+Epoch 3, Average Loss: 25.738145765555334
+
+Test average Loss: 0.30706973951690053
+
+Valid Result:
+
+macro_auc:0.6872173470408098, micro_auc:0.5405235495845072
+precision_mean:0.17788810174596978
+recall_mean:0.6042061386888973
+f1_mean:0.2748545572074984
+
+Test average Loss: 0.15461200714111328
+
+Test Result:
+
+macro_auc:0.6887860025973382, micro_auc:0.5385552978621975
+precision_mean:0.17531572071418203
+recall_mean:0.6076729559748427
+f1_mean:0.2721230214611615
+
+
+epoch 4 --------------------------
+
+Epoch 4, Average Loss: 25.62034943379254
+
+Test average Loss: 0.3619685270348374
+
+Valid Result:
+
+macro_auc:0.6919138232858651, micro_auc:0.5511576962863587
+precision_mean:0.18019923201068508
+recall_mean:0.6134899583175445
+f1_mean:0.2785735793865875
+
+Test average Loss: 0.18953048706054687
+
+Test Result:
+
+macro_auc:0.6967280651294698, micro_auc:0.5510177537045088
+precision_mean:0.17939705775780854
+recall_mean:0.6227672955974842
+f1_mean:0.2785529425002813
+
+
+epoch 5 --------------------------
+
+Epoch 5, Average Loss: 25.50358792795128
+
+Test average Loss: 0.41896446383729274
+
+Valid Result:
+
+macro_auc:0.6998008037278127, micro_auc:0.5647542473320719
+precision_mean:0.18551604022697904
+recall_mean:0.625615763546798
+f1_mean:0.2861723794254019
+
+Test average Loss: 0.19994304656982423
+
+Test Result:
+
+macro_auc:0.7039195264547874, micro_auc:0.5637194097382838
+precision_mean:0.18402131464651994
+recall_mean:0.6342138364779875
+f1_mean:0.28526973888936036
+
+
+epoch 6 --------------------------
+
+Epoch 6, Average Loss: 25.393786907196045
+
+Test average Loss: 0.3015054780609754
+
+Valid Result:
+
+macro_auc:0.7040884733426281, micro_auc:0.5780636660066136
+precision_mean:0.18859921958943618
+recall_mean:0.6318681318681318
+f1_mean:0.290492574365228
+
+Test average Loss: 0.19207489013671875
+
+Test Result:
+
+macro_auc:0.7075085478894828, micro_auc:0.5725701418016526
+precision_mean:0.18665295478752708
+recall_mean:0.639245283018868
+f1_mean:0.2889387952355232
+
+
+epoch 7 --------------------------
+
+Epoch 7, Average Loss: 25.28934981053569
+
+Test average Loss: 0.36105214333047675
+
+Valid Result:
+
+macro_auc:0.7090856217570222, micro_auc:0.5843763447122003
+precision_mean:0.19387460271597803
+recall_mean:0.6356574460022736
+f1_mean:0.29712615684364346
+
+Test average Loss: 0.18045326232910155
+
+Test Result:
+
+macro_auc:0.7119335363900869, micro_auc:0.5805583427552544
+precision_mean:0.1917092603728202
+recall_mean:0.6416352201257861
+f1_mean:0.2952138433937149
+
+
+epoch 8 --------------------------
+
+Epoch 8, Average Loss: 25.19328187661342
+
+Test average Loss: 0.3637932757942044
+
+Valid Result:
+
+macro_auc:0.7125078316844109, micro_auc:0.5916429182583108
+precision_mean:0.20017969451931716
+recall_mean:0.6331943918150815
+f1_mean:0.3041915077595231
+
+Test average Loss: 0.16233248392740884
+
+Test Result:
+
+macro_auc:0.7138178993706871, micro_auc:0.5918350526795898
+precision_mean:0.1966156951020725
+recall_mean:0.6372327044025157
+f1_mean:0.30051014355202277
+
+
+epoch 9 --------------------------
+
+Epoch 9, Average Loss: 25.102963882613466
+
+Test average Loss: 0.3212643253559969
+
+Valid Result:
+
+macro_auc:0.7162315585816138, micro_auc:0.5969277697596614
+precision_mean:0.20628744364152923
+recall_mean:0.6328154604016673
+f1_mean:0.3111463039731706
+
+Test average Loss: 0.20692933400472005
+
+Test Result:
+
+macro_auc:0.7169505748551598, micro_auc:0.596593031706649
+precision_mean:0.2021348898572742
+recall_mean:0.6359748427672955
+f1_mean:0.30676819464247795
+
+
+epoch 10 --------------------------
+
+Epoch 10, Average Loss: 25.020001377242494
+
+Test average Loss: 0.3006832745610451
+
+Valid Result:
+
+macro_auc:0.7175016392969232, micro_auc:0.5993133332916493
+precision_mean:0.20914909638554216
+recall_mean:0.6314892004547177
+f1_mean:0.3142264542283398
+
+Test average Loss: 0.17924241383870443
+
+Test Result:
+
+macro_auc:0.7192106915373299, micro_auc:0.6015713029741075
+precision_mean:0.20573637103336045
+recall_mean:0.6361006289308176
+f1_mean:0.31091300338149397
+
+
+epoch 11 --------------------------
+
+Epoch 11, Average Loss: 24.939166217211234
+
+Test average Loss: 0.2898250112728197
+
+Valid Result:
+
+macro_auc:0.7181032908357734, micro_auc:0.6009455213663124
+precision_mean:0.2130070830650354
+recall_mean:0.6267525577870405
+f1_mean:0.31795463283352554
+
+Test average Loss: 0.24665453592936198
+
+Test Result:
+
+macro_auc:0.7194541545853756, micro_auc:0.6038104676683212
+precision_mean:0.2090852260887685
+recall_mean:0.6310691823899371
+f1_mean:0.31410236343715764
+
+
+epoch 12 --------------------------
+
+Epoch 12, Average Loss: 24.862292130154916
+
+Test average Loss: 0.46506694871552134
+
+Valid Result:
+
+macro_auc:0.7207428315223627, micro_auc:0.6048991897958821
+precision_mean:0.2172658094988192
+recall_mean:0.6275104206138689
+f1_mean:0.3227755579378228
+
+Test average Loss: 0.1871081034342448
+
+Test Result:
+
+macro_auc:0.7204472718873638, micro_auc:0.6090731093335087
+precision_mean:0.21299577338513426
+recall_mean:0.6275471698113207
+f1_mean:0.31804417811493957
+
+
+epoch 13 --------------------------
+
+Epoch 13, Average Loss: 24.78640998407189
+
+Test average Loss: 0.2741294782988879
+
+Valid Result:
+
+macro_auc:0.7208018523556032, micro_auc:0.6065620069027631
+precision_mean:0.22100302928306967
+recall_mean:0.6220159151193634
+f1_mean:0.32613122733820094
+
+Test average Loss: 0.23186752319335938
+
+Test Result:
+
+macro_auc:0.7216538057475517, micro_auc:0.6084063139341931
+precision_mean:0.21767184619436397
+recall_mean:0.6237735849056604
+f1_mean:0.3227254978524014
+
+
+epoch 14 --------------------------
+
+Epoch 14, Average Loss: 24.712197558338424
+
+Test average Loss: 0.34278830703423946
+
+Valid Result:
+
+macro_auc:0.7210503388955509, micro_auc:0.6085370453401253
+precision_mean:0.22504838263754492
+recall_mean:0.6169003410382721
+f1_mean:0.32978831155677096
+
+Test average Loss: 0.254093017578125
+
+Test Result:
+
+macro_auc:0.7213080577792814, micro_auc:0.6125587625499626
+precision_mean:0.2211564442042691
+recall_mean:0.6177358490566037
+f1_mean:0.3257063270990847
+
+
+epoch 15 --------------------------
+
+Epoch 15, Average Loss: 24.640343854151872
+
+Test average Loss: 0.12875926737882654
+
+Valid Result:
+
+macro_auc:0.7208215899667195, micro_auc:0.6092945329164514
+precision_mean:0.22946498539573984
+recall_mean:0.6102690413035241
+f1_mean:0.33352316852187425
+
+Test average Loss: 0.15673753102620444
+
+Test Result:
+
+macro_auc:0.7212806853009416, micro_auc:0.6156199142073856
+precision_mean:0.22595348837209303
+recall_mean:0.6110691823899371
+f1_mean:0.3299151103565365
+
+
+epoch 16 --------------------------
+
+Epoch 16, Average Loss: 24.57178019337445
+
+Test average Loss: 0.3593699007618184
+
+Valid Result:
+
+macro_auc:0.7225921765639138, micro_auc:0.6161810651716657
+precision_mean:0.23117050164356154
+recall_mean:0.6129215611974232
+f1_mean:0.3357202158572022
+
+Test average Loss: 0.1577317174275716
+
+Test Result:
+
+macro_auc:0.7219799179761777, micro_auc:0.6186476729920528
+precision_mean:0.2269354612907742
+recall_mean:0.6116981132075472
+f1_mean:0.3310527928111917
+
+
+epoch 17 --------------------------
+
+Epoch 17, Average Loss: 24.504946381922263
+
+Test average Loss: 0.3925305580606266
+
+Valid Result:
+
+macro_auc:0.7215089887538625, micro_auc:0.6165589861832851
+precision_mean:0.23465491923641704
+recall_mean:0.605532398635847
+f1_mean:0.33823685046036617
+
+Test average Loss: 0.16430577596028645
+
+Test Result:
+
+macro_auc:0.7219718086971794, micro_auc:0.6201717806174323
+precision_mean:0.2312380038387716
+recall_mean:0.6061635220125786
+f1_mean:0.3347690170197986
+
+
+epoch 18 --------------------------
+
+Epoch 18, Average Loss: 24.440153070655
+
+Test average Loss: 0.23131370544433594
+
+Valid Result:
+
+macro_auc:0.721570275188379, micro_auc:0.6192037729791275
+precision_mean:0.23696753053321418
+recall_mean:0.6028798787419477
+f1_mean:0.34021169678178126
+
+Test average Loss: 0.19100476582845052
+
+Test Result:
+
+macro_auc:0.7227431129556845, micro_auc:0.6233461133614091
+precision_mean:0.2340798442064265
+recall_mean:0.6047798742138365
+f1_mean:0.33752193752193754
+
+
+epoch 19 --------------------------
+
+Epoch 19, Average Loss: 24.37748784183031
+
+Test average Loss: 0.18018473411092953
+
+Valid Result:
+
+macro_auc:0.7227318758425926, micro_auc:0.6208700743446394
+precision_mean:0.2417607567897467
+recall_mean:0.6004168245547555
+f1_mean:0.3447188077885347
+
+Test average Loss: 0.24967547098795573
+
+Test Result:
+
+macro_auc:0.7232835071822904, micro_auc:0.6242130295520263
+precision_mean:0.23842546397924566
+recall_mean:0.6011320754716981
+f1_mean:0.34143030649424877
+
+
+epoch 20 --------------------------
+
+Epoch 20, Average Loss: 24.316370278240676
+
+Test average Loss: 0.24631389306516063
+
+Valid Result:
+
+macro_auc:0.718808430432908, micro_auc:0.617913060630869
+precision_mean:0.2426418924193926
+recall_mean:0.5888594164456233
+f1_mean:0.3436722507878587
+
+Test average Loss: 0.24866849263509114
+
+Test Result:
+
+macro_auc:0.7218481202221307, micro_auc:0.6232659420977682
+precision_mean:0.241495728681774
+recall_mean:0.5938364779874213
+f1_mean:0.3433579402887378
+
+
+epoch 21 --------------------------
+
+Epoch 21, Average Loss: 24.255919429885438
+
+Test average Loss: 0.32344757780736805
+
+Valid Result:
+
+macro_auc:0.719312430716761, micro_auc:0.6191469833918017
+precision_mean:0.25016281341582547
+recall_mean:0.5822281167108754
+f1_mean:0.3499601412139848
+
+Test average Loss: 0.19426677703857423
+
+Test Result:
+
+macro_auc:0.7213404057403303, micro_auc:0.6230265412019935
+precision_mean:0.24908876500857632
+recall_mean:0.5845283018867925
+f1_mean:0.3493197023227843
+
+
+epoch 22 --------------------------
+
+Epoch 22, Average Loss: 24.19796344103566
+
+Test average Loss: 0.30426255050970585
+
+Valid Result:
+
+macro_auc:0.7183921741984725, micro_auc:0.6206279965769197
+precision_mean:0.2515034187330093
+recall_mean:0.5784388025767336
+f1_mean:0.3505770224493311
+
+Test average Loss: 0.20621167500813803
+
+Test Result:
+
+macro_auc:0.7214666032902376, micro_auc:0.6200347524002515
+precision_mean:0.2509474824038982
+recall_mean:0.5830188679245283
+f1_mean:0.35087055261165784
+
+
+epoch 23 --------------------------
+
+Epoch 23, Average Loss: 24.141513273535498
+
+Test average Loss: 0.2866308251205756
+
+Valid Result:
+
+macro_auc:0.7178143690730526, micro_auc:0.621170292118446
+precision_mean:0.25518637206948896
+recall_mean:0.5733232284956423
+f1_mean:0.35317460317460314
+
+Test average Loss: 0.20011801401774088
+
+Test Result:
+
+macro_auc:0.7204331064403686, micro_auc:0.6222727146318482
+precision_mean:0.25467977559295674
+recall_mean:0.5767295597484277
+f1_mean:0.35333102146187334
+
+
+epoch 24 --------------------------
+
+Epoch 24, Average Loss: 24.08685790970031
+
+Test average Loss: 0.17607741453209702
+
+Valid Result:
+
+macro_auc:0.7170387654362327, micro_auc:0.6206614476990492
+precision_mean:0.2603622431208638
+recall_mean:0.5665024630541872
+f1_mean:0.35675933659467846
+
+Test average Loss: 0.15399000803629556
+
+Test Result:
+
+macro_auc:0.7179559910817036, micro_auc:0.6177982418162958
+precision_mean:0.25778615920909764
+recall_mean:0.5674213836477987
+f1_mean:0.35451294746355455
+
+
+epoch 25 --------------------------
+
+Epoch 25, Average Loss: 24.03360837674236
+
+Test average Loss: 0.2304906650465362
+
+Valid Result:
+
+macro_auc:0.7151303611614195, micro_auc:0.6207197403403235
+precision_mean:0.2600877192982456
+recall_mean:0.56176582038651
+f1_mean:0.35555822041012114
+
+Test average Loss: 0.2760615030924479
+
+Test Result:
+
+macro_auc:0.7191159319312189, micro_auc:0.621479794051496
+precision_mean:0.2604833592893811
+recall_mean:0.5680503144654088
+f1_mean:0.3571795784395143
+
+
+epoch 26 --------------------------
+
+Epoch 26, Average Loss: 23.981373097317153
+
+Test average Loss: 0.21296740551384127
+
+Valid Result:
+
+macro_auc:0.7144105143560017, micro_auc:0.620855077481331
+precision_mean:0.2655910079767948
+recall_mean:0.555134520651762
+f1_mean:0.3592887798896383
+
+Test average Loss: 0.1254259236653646
+
+Test Result:
+
+macro_auc:0.7162745059080753, micro_auc:0.6194118509913713
+precision_mean:0.26381535899113673
+recall_mean:0.5578616352201258
+f1_mean:0.35822462743831024
+
+
+epoch 27 --------------------------
+
+Epoch 27, Average Loss: 23.931302184602654
+
+Test average Loss: 0.31650922736343073
+
+Valid Result:
+
+macro_auc:0.7142165174467426, micro_auc:0.6199947632868712
+precision_mean:0.27247085370440016
+recall_mean:0.5490716180371353
+f1_mean:0.3642076159356542
+
+Test average Loss: 0.13181905110677083
+
+Test Result:
+
+macro_auc:0.7147844166582448, micro_auc:0.6178335750228989
+precision_mean:0.26952980377637914
+recall_mean:0.549433962264151
+f1_mean:0.36164927968206656
+
+
+epoch 28 --------------------------
+
+Epoch 28, Average Loss: 23.882773528536003
+
+Test average Loss: 0.24639341782550422
+
+Valid Result:
+
+macro_auc:0.7117530408593126, micro_auc:0.6214802248123122
+precision_mean:0.2756354498888567
+recall_mean:0.5403561955286094
+f1_mean:0.365056
+
+Test average Loss: 0.16344342549641927
+
+Test Result:
+
+macro_auc:0.7121818857658974, micro_auc:0.6188122851742279
+precision_mean:0.2713574175650968
+recall_mean:0.5413836477987422
+f1_mean:0.3615135861576582
+
+
+epoch 29 --------------------------
+
+Epoch 29, Average Loss: 23.835244724000116
+
+Test average Loss: 0.3108494427739357
+
+Valid Result:
+
+macro_auc:0.7116116519796823, micro_auc:0.6204850367762613
+precision_mean:0.2787545427757588
+recall_mean:0.5377036756347101
+f1_mean:0.367164758393169
+
+Test average Loss: 0.14302407582600912
+
+Test Result:
+
+macro_auc:0.7120002446666398, micro_auc:0.6170871684788134
+precision_mean:0.274287544028178
+recall_mean:0.5387421383647799
+f1_mean:0.363505198387439
+
+
+epoch 30 --------------------------
+
+Epoch 30, Average Loss: 23.788728776680994
+
+Test average Loss: 0.24585521464445154
+
+Valid Result:
+
+macro_auc:0.7095115163968859, micro_auc:0.6184249444747578
+precision_mean:0.2824813093554253
+recall_mean:0.5297461159530125
+f1_mean:0.36847654190827617
+
+Test average Loss: 0.1447400665283203
+
+Test Result:
+
+macro_auc:0.7115240184374971, micro_auc:0.6188212906503402
+precision_mean:0.27929469044016053
+recall_mean:0.5339622641509434
+f1_mean:0.3667545034342736
+
+
+epoch 31 --------------------------
+
+Epoch 31, Average Loss: 23.744643120176764
+
+Test average Loss: 0.22211041742441606
+
+Valid Result:
+
+macro_auc:0.7076033425222025, micro_auc:0.6178018713151148
+precision_mean:0.2898015202702703
+recall_mean:0.5200833649109511
+f1_mean:0.3722033898305085
+
+Test average Loss: 0.2041411336263021
+
+Test Result:
+
+macro_auc:0.7094529089634406, micro_auc:0.6166851974708496
+precision_mean:0.2871533048157858
+recall_mean:0.5235220125786163
+f1_mean:0.3708786312600249
+
+
+epoch 32 --------------------------
+
+Epoch 32, Average Loss: 23.702396484010247
+
+Test average Loss: 0.15150297904501156
+
+Valid Result:
+
+macro_auc:0.7062968969864124, micro_auc:0.6164564168842805
+precision_mean:0.2897196261682243
+recall_mean:0.5168624478969307
+f1_mean:0.3713080168776371
+
+Test average Loss: 0.13966634114583334
+
+Test Result:
+
+macro_auc:0.7082269877238099, micro_auc:0.6157847550950326
+precision_mean:0.2870820036076037
+recall_mean:0.5205031446540881
+f1_mean:0.3700590234305133
+
+
+epoch 33 --------------------------
+
+Epoch 33, Average Loss: 23.660438036063752
+
+Test average Loss: 0.2856333207110969
+
+Valid Result:
+
+macro_auc:0.7042908414566019, micro_auc:0.615696242104115
+precision_mean:0.2923043525453164
+recall_mean:0.5102311481621826
+f1_mean:0.3716789731557518
+
+Test average Loss: 0.18157067616780598
+
+Test Result:
+
+macro_auc:0.7076420981750047, micro_auc:0.6169928976937291
+precision_mean:0.29120567375886525
+recall_mean:0.5164779874213836
+f1_mean:0.37242630385487524
+
+
+epoch 34 --------------------------
+
+Epoch 34, Average Loss: 23.620231696808954
+
+Test average Loss: 0.2941337118343431
+
+Valid Result:
+
+macro_auc:0.7018675312917937, micro_auc:0.6131396365916533
+precision_mean:0.29646215853112406
+recall_mean:0.5017051913603637
+f1_mean:0.37269528501055593
+
+Test average Loss: 0.21495015462239583
+
+Test Result:
+
+macro_auc:0.7048287024663251, micro_auc:0.6172077921482564
+precision_mean:0.29533299142794345
+recall_mean:0.5070440251572327
+f1_mean:0.37325802120468543
+
+
+epoch 35 --------------------------
+
+Epoch 35, Average Loss: 23.581760809241064
+
+Test average Loss: 0.33359710537657444
+
+Valid Result:
+
+macro_auc:0.7003867880578389, micro_auc:0.6119606150714634
+precision_mean:0.30305494250203274
+recall_mean:0.49431602879878744
+f1_mean:0.37574710160581837
+
+Test average Loss: 0.14949161529541016
+
+Test Result:
+
+macro_auc:0.7017578896871866, micro_auc:0.6144002504199314
+precision_mean:0.29904704280744215
+recall_mean:0.49735849056603776
+f1_mean:0.37351218590591356
+
+
+epoch 36 --------------------------
+
+Epoch 36, Average Loss: 23.544881421731287
+
+Test average Loss: 0.30967899244658803
+
+Valid Result:
+
+macro_auc:0.7003323368271722, micro_auc:0.6147051760973292
+precision_mean:0.307400828892836
+recall_mean:0.49185297461159533
+f1_mean:0.3783429279312104
+
+Test average Loss: 0.1673325983683268
+
+Test Result:
+
+macro_auc:0.7006359804264142, micro_auc:0.6136402724876793
+precision_mean:0.3042091340543064
+recall_mean:0.4918238993710692
+f1_mean:0.37590732105946256
+
+
+epoch 37 --------------------------
+
+Epoch 37, Average Loss: 23.508436844168433
+
+Test average Loss: 0.3769888585927535
+
+Valid Result:
+
+macro_auc:0.6985456222208944, micro_auc:0.6108008358396885
+precision_mean:0.30662062395808526
+recall_mean:0.4878741947707465
+f1_mean:0.37657209710441647
+
+Test average Loss: 0.21872538248697918
+
+Test Result:
+
+macro_auc:0.7000960383427395, micro_auc:0.6136250486324412
+precision_mean:0.3043240711832657
+recall_mean:0.49044025157232707
+f1_mean:0.3755900202292651
+
+
+epoch 38 --------------------------
+
+Epoch 38, Average Loss: 23.47409938341118
+
+Test average Loss: 0.2823014162024673
+
+Valid Result:
+
+macro_auc:0.696193659296269, micro_auc:0.6106449906747534
+precision_mean:0.31166112547715796
+recall_mean:0.4795377036756347
+f1_mean:0.3777893872677065
+
+Test average Loss: 0.2453065236409505
+
+Test Result:
+
+macro_auc:0.6975680900189829, micro_auc:0.6070250183418903
+precision_mean:0.308733483725427
+recall_mean:0.4820125786163522
+f1_mean:0.37638738827227186
+
+
+epoch 39 --------------------------
+
+Epoch 39, Average Loss: 23.440621746488777
+
+Test average Loss: 0.19692434583391463
+
+Valid Result:
+
+macro_auc:0.6946912584501168, micro_auc:0.6108059399693164
+precision_mean:0.3162155325069567
+recall_mean:0.47366426676771506
+f1_mean:0.379247572815534
+
+Test average Loss: 0.1659792455037435
+
+Test Result:
+
+macro_auc:0.6948557431609084, micro_auc:0.6058606022365359
+precision_mean:0.31275446614042374
+recall_mean:0.4734591194968553
+f1_mean:0.37668251188391294
+
+
+epoch 40 --------------------------
+
+Epoch 40, Average Loss: 23.407552014309097
+
+Test average Loss: 0.25836843373824137
+
+Valid Result:
+
+macro_auc:0.694692564050852, micro_auc:0.6099263172006129
+precision_mean:0.321115126484254
+recall_mean:0.47139067828723
+f1_mean:0.3820052203285736
+
+Test average Loss: 0.209598019917806
+
+Test Result:
+
+macro_auc:0.6952646714172243, micro_auc:0.6112123491678011
+precision_mean:0.3175972927241963
+recall_mean:0.4722012578616352
+f1_mean:0.37976732422862924
+
+
+epoch 41 --------------------------
+
+Epoch 41, Average Loss: 23.37552510219741
+
+Test average Loss: 0.3119966156628667
+
+Valid Result:
+
+macro_auc:0.6920203449458583, micro_auc:0.6082778962889656
+precision_mean:0.3227506257410091
+recall_mean:0.46419098143236076
+f1_mean:0.3807599658093092
+
+Test average Loss: 0.23092262268066407
+
+Test Result:
+
+macro_auc:0.6919426569408812, micro_auc:0.6033892708167414
+precision_mean:0.319047619047619
+recall_mean:0.46352201257861636
+f1_mean:0.3779487179487179
+
+
+epoch 42 --------------------------
+
+Epoch 42, Average Loss: 23.345435212807825
+
+Test average Loss: 0.2748972834373007
+
+Valid Result:
+
+macro_auc:0.6901114030707421, micro_auc:0.6088143654629353
+precision_mean:0.3260957518543493
+recall_mean:0.458128078817734
+f1_mean:0.3809974001418105
+
+Test average Loss: 0.12467395782470703
+
+Test Result:
+
+macro_auc:0.6902507998631344, micro_auc:0.6041142394162764
+precision_mean:0.32210135314407007
+recall_mean:0.45811320754716983
+f1_mean:0.37825206418445245
+
+
+epoch 43 --------------------------
+
+Epoch 43, Average Loss: 23.316094930428434
+
+Test average Loss: 0.2499073768148617
+
+Valid Result:
+
+macro_auc:0.6912368309045833, micro_auc:0.6094061479007368
+precision_mean:0.32846122614697526
+recall_mean:0.4598332701780978
+f1_mean:0.38320044209362913
+
+Test average Loss: 0.10579500198364258
+
+Test Result:
+
+macro_auc:0.691540601893944, micro_auc:0.6052278013655157
+precision_mean:0.32466495074110235
+recall_mean:0.460125786163522
+f1_mean:0.38070458448248945
+
+
+epoch 44 --------------------------
+
+Epoch 44, Average Loss: 23.287168246341416
+
+Test average Loss: 0.23250758891202966
+
+Valid Result:
+
+macro_auc:0.6872510238597767, micro_auc:0.6069210717937277
+precision_mean:0.3333333333333333
+recall_mean:0.4482758620689655
+f1_mean:0.38235294117647056
+
+Test average Loss: 0.15145216623942057
+
+Test Result:
+
+macro_auc:0.688153965366743, micro_auc:0.6019362792157572
+precision_mean:0.33098656785548863
+recall_mean:0.44943396226415094
+f1_mean:0.3812216591090957
+
+
+epoch 45 --------------------------
+
+Epoch 45, Average Loss: 23.259576062282243
+
+Test average Loss: 0.3505556534747688
+
+Valid Result:
+
+macro_auc:0.6857113749926464, micro_auc:0.6068339843231204
+precision_mean:0.33504933504933504
+recall_mean:0.44391815081470254
+f1_mean:0.3818759677287914
+
+Test average Loss: 0.1680006790161133
+
+Test Result:
+
+macro_auc:0.688807839190463, micro_auc:0.6047336763614177
+precision_mean:0.33565184697809947
+recall_mean:0.4491823899371069
+f1_mean:0.38420571305610846
+
+
+epoch 46 --------------------------
+
+Epoch 46, Average Loss: 23.232660618436288
+
+Test average Loss: 0.28852865647296516
+
+Valid Result:
+
+macro_auc:0.6844176014639931, micro_auc:0.6063895253713598
+precision_mean:0.339885580167229
+recall_mean:0.4389920424403183
+f1_mean:0.38313352625051667
+
+Test average Loss: 0.19304162343343098
+
+Test Result:
+
+macro_auc:0.685933485062312, micro_auc:0.6012938124197634
+precision_mean:0.34029531766077326
+recall_mean:0.44062893081761006
+f1_mean:0.3840166630124972
+
+
+epoch 47 --------------------------
+
+Epoch 47, Average Loss: 23.20691734291168
+
+Test average Loss: 0.11922069471709583
+
+Valid Result:
+
+macro_auc:0.6824576643601565, micro_auc:0.6062080895594782
+precision_mean:0.3421564229101241
+recall_mean:0.43349753694581283
+f1_mean:0.38244880902632683
+
+Test average Loss: 0.2091263198852539
+
+Test Result:
+
+macro_auc:0.6837484030916642, micro_auc:0.6019127547322752
+precision_mean:0.3412925505673409
+recall_mean:0.4350943396226415
+f1_mean:0.3825269560409179
+
+
+epoch 48 --------------------------
+
+Epoch 48, Average Loss: 23.181129001526244
+
+Test average Loss: 0.3571284936398876
+
+Valid Result:
+
+macro_auc:0.680033048594613, micro_auc:0.6060669710570057
+precision_mean:0.3435405240706886
+recall_mean:0.427245168624479
+f1_mean:0.38084782975848674
+
+Test average Loss: 0.24574966430664064
+
+Test Result:
+
+macro_auc:0.6818908343559088, micro_auc:0.6012416235734545
+precision_mean:0.34310085298544907
+recall_mean:0.430062893081761
+f1_mean:0.3816913201228021
+
+
+epoch 49 --------------------------
+
+Epoch 49, Average Loss: 23.157034059919685
+
+Test average Loss: 0.2069837998370735
+
+Valid Result:
+
+macro_auc:0.6792290673418107, micro_auc:0.6053693936185618
+precision_mean:0.34567329939842667
+recall_mean:0.4245926487305798
+f1_mean:0.3810900433636596
+
+Test average Loss: 0.1566738255818685
+
+Test Result:
+
+macro_auc:0.6810894001840031, micro_auc:0.6011432777315214
+precision_mean:0.34564509564509566
+recall_mean:0.42729559748427676
+f1_mean:0.3821577230284621
+
+
+epoch 50 --------------------------
+
+Epoch 50, Average Loss: 23.133090961501892
+
+Test average Loss: 0.325553796729263
+
+Valid Result:
+
+macro_auc:0.6766869859101105, micro_auc:0.5986719714812336
+precision_mean:0.35031036129237625
+recall_mean:0.4170140204622963
+f1_mean:0.38076290978289073
+
+Test average Loss: 0.20156986236572266
+
+Test Result:
+
+macro_auc:0.678887977385721, micro_auc:0.6000141611729815
+precision_mean:0.3504927657789893
+recall_mean:0.42050314465408806
+f1_mean:0.3823193046660567
+
+
+epoch 51 --------------------------
+
+Epoch 51, Average Loss: 23.110865836124496
+
+Test average Loss: 0.1726821977265027
+
+Valid Result:
+
+macro_auc:0.6771954021964505, micro_auc:0.6025519588898526
+precision_mean:0.3493594812588961
+recall_mean:0.418529746115953
+f1_mean:0.3808292388587191
+
+Test average Loss: 0.1970189412434896
+
+Test Result:
+
+macro_auc:0.6795494249219528, micro_auc:0.5993130907502402
+precision_mean:0.3510204081632653
+recall_mean:0.4218867924528302
+f1_mean:0.3832047986289631
+
+
+epoch 52 --------------------------
+
+Epoch 52, Average Loss: 23.0890793762359
+
+Test average Loss: 0.3424530807806521
+
+Valid Result:
+
+macro_auc:0.6736868306204231, micro_auc:0.6024450737951332
+precision_mean:0.3548387096774194
+recall_mean:0.40848806366047746
+f1_mean:0.3797780517879162
+
+Test average Loss: 0.22331275939941406
+
+Test Result:
+
+macro_auc:0.6767342594876304, micro_auc:0.5991169219995145
+precision_mean:0.35559878945092954
+recall_mean:0.4138364779874214
+f1_mean:0.38251366120218583
+
+
+epoch 53 --------------------------
+
+Epoch 53, Average Loss: 23.06851808008445
+
+Test average Loss: 0.22235745799784756
+
+Valid Result:
+
+macro_auc:0.6728048973237181, micro_auc:0.601590595404491
+precision_mean:0.35670274771024146
+recall_mean:0.40583554376657827
+f1_mean:0.37968625365594255
+
+Test average Loss: 0.16009783426920574
+
+Test Result:
+
+macro_auc:0.6749380198011857, micro_auc:0.5975567075237053
+precision_mean:0.3562438437123782
+recall_mean:0.40943396226415096
+f1_mean:0.3809913969684555
+
+
+epoch 54 --------------------------
+
+Epoch 54, Average Loss: 23.04820472595701
+
+Test average Loss: 0.27928928453095103
+
+Valid Result:
+
+macro_auc:0.6732492239739629, micro_auc:0.6027002682572485
+precision_mean:0.36012104909213183
+recall_mean:0.40583554376657827
+f1_mean:0.38161411010155
+
+Test average Loss: 0.13415363311767578
+
+Test Result:
+
+macro_auc:0.6747705791740801, micro_auc:0.6041171404043505
+precision_mean:0.35997335997336
+recall_mean:0.4079245283018868
+f1_mean:0.38245179550681063
+
+
+epoch 55 --------------------------
+
+Epoch 55, Average Loss: 23.028622125724397
+
+Test average Loss: 0.23559926480663065
+
+Valid Result:
+
+macro_auc:0.6704168767787849, micro_auc:0.6022700119616222
+precision_mean:0.360109383011451
+recall_mean:0.39920424403183025
+f1_mean:0.3786503728996316
+
+Test average Loss: 0.23740336100260417
+
+Test Result:
+
+macro_auc:0.6725375866100481, micro_auc:0.5979687347972846
+precision_mean:0.35850111856823264
+recall_mean:0.40314465408805034
+f1_mean:0.37951450562462996
+
+
+epoch 56 --------------------------
+
+Epoch 56, Average Loss: 23.00963996416069
+
+Test average Loss: 0.4259592951560507
+
+Valid Result:
+
+macro_auc:0.6700092605492155, micro_auc:0.6018162179508977
+precision_mean:0.3666316158429723
+recall_mean:0.39636225843122397
+f1_mean:0.38091769847050255
+
+Test average Loss: 0.17421792348225912
+
+Test Result:
+
+macro_auc:0.6705400312386188, micro_auc:0.5959158385669399
+precision_mean:0.3646242774566474
+recall_mean:0.39672955974842766
+f1_mean:0.38
+
+
+epoch 57 --------------------------
+
+Epoch 57, Average Loss: 22.991445376103616
+
+Test average Loss: 0.2494143077305385
+
+Valid Result:
+
+macro_auc:0.6703714111531788, micro_auc:0.603250318731855
+precision_mean:0.3676083523425162
+recall_mean:0.3969306555513452
+f1_mean:0.38170720597613195
+
+Test average Loss: 0.2474273681640625
+
+Test Result:
+
+macro_auc:0.6705935808822251, micro_auc:0.5964932965375118
+precision_mean:0.365522837931834
+recall_mean:0.39660377358490567
+f1_mean:0.3804295366795367
+
+
+epoch 58 --------------------------
+
+Epoch 58, Average Loss: 22.97326915102651
+
+Test average Loss: 0.33926691327776226
+
+Valid Result:
+
+macro_auc:0.667957508993669, micro_auc:0.6026783808270956
+precision_mean:0.3637800808009837
+recall_mean:0.39238347859037515
+f1_mean:0.3775407893537508
+
+Test average Loss: 0.2692207845052083
+
+Test Result:
+
+macro_auc:0.66932987450359, micro_auc:0.5966452927698729
+precision_mean:0.3630993745656706
+recall_mean:0.39433962264150946
+f1_mean:0.3780752532561505
+
+
+epoch 59 --------------------------
+
+Epoch 59, Average Loss: 22.95637851312341
+
+Test average Loss: 0.24790415471913863
+
+Valid Result:
+
+macro_auc:0.6680367666383069, micro_auc:0.6034074687135466
+precision_mean:0.37266968325791855
+recall_mean:0.3901098901098901
+f1_mean:0.3811904100712765
+
+Test average Loss: 0.1938563283284505
+
+Test Result:
+
+macro_auc:0.6685272876856199, micro_auc:0.5971496302561771
+precision_mean:0.37103910080114794
+recall_mean:0.39031446540880504
+f1_mean:0.3804327836694661
+
+
+epoch 60 --------------------------
+
+Epoch 60, Average Loss: 22.93957014387822
+
+Test average Loss: 0.30237287404585855
+
+Valid Result:
+
+macro_auc:0.6656955173197153, micro_auc:0.5960258223858169
+precision_mean:0.377260018639329
+recall_mean:0.3834785903751421
+f1_mean:0.3803438880015033
+
+Test average Loss: 0.2042992909749349
+
+Test Result:
+
+macro_auc:0.6670942060175894, micro_auc:0.5958406571773351
+precision_mean:0.37672074729596855
+recall_mean:0.3855345911949686
+f1_mean:0.38107671266940196
+
+
+epoch 61 --------------------------
+
+Epoch 61, Average Loss: 22.92371597897959
+
+Test average Loss: 0.19662862894486408
+
+Valid Result:
+
+macro_auc:0.6668460587677003, micro_auc:0.6023115358757448
+precision_mean:0.37511486859033266
+recall_mean:0.3866995073891626
+f1_mean:0.3808191062599123
+
+Test average Loss: 0.228152338663737
+
+Test Result:
+
+macro_auc:0.6674367017408586, micro_auc:0.5964030859325884
+precision_mean:0.37439143135345665
+recall_mean:0.3869182389937107
+f1_mean:0.3805517753309414
+
+
+epoch 62 --------------------------
+
+Epoch 62, Average Loss: 22.90803651410745
+
+Test average Loss: 0.4041934499935228
+
+Valid Result:
+
+macro_auc:0.66558162285557, micro_auc:0.5960880893712309
+precision_mean:0.37920030035667357
+recall_mean:0.38272072754831377
+f1_mean:0.380952380952381
+
+Test average Loss: 0.1592480977376302
+
+Test Result:
+
+macro_auc:0.6660670894776214, micro_auc:0.5959204035445117
+precision_mean:0.37780811716519797
+recall_mean:0.3828930817610063
+f1_mean:0.3803336040482289
+
+
+epoch 63 --------------------------
+
+Epoch 63, Average Loss: 22.893808706823098
+
+Test average Loss: 0.33762698270836655
+
+Valid Result:
+
+macro_auc:0.6626509716050272, micro_auc:0.5999603856501936
+precision_mean:0.38169556840077074
+recall_mean:0.3753315649867374
+f1_mean:0.3784868169659916
+
+Test average Loss: 0.19979771931966145
+
+Test Result:
+
+macro_auc:0.6643020081705412, micro_auc:0.5953096228513802
+precision_mean:0.38019977241117714
+recall_mean:0.3782389937106918
+f1_mean:0.3792168484772053
+
+
+epoch 64 --------------------------
+
+Epoch 64, Average Loss: 22.879674058511437
+
+Test average Loss: 0.24883067851163904
+
+Valid Result:
+
+macro_auc:0.6630832790485027, micro_auc:0.6008668187553446
+precision_mean:0.38345574023965984
+recall_mean:0.37589996210685866
+f1_mean:0.3796402602372752
+
+Test average Loss: 0.16849198659261067
+
+Test Result:
+
+macro_auc:0.6638315859282676, micro_auc:0.5948118913755085
+precision_mean:0.3830304581520348
+recall_mean:0.37647798742138366
+f1_mean:0.379725957878711
+
+
+epoch 65 --------------------------
+
+Epoch 65, Average Loss: 22.8662293783697
+
+Test average Loss: 0.3632964309380979
+
+Valid Result:
+
+macro_auc:0.662395035460884, micro_auc:0.6007448957344959
+precision_mean:0.388746298124383
+recall_mean:0.3730579765062524
+f1_mean:0.38074059750555933
+
+Test average Loss: 0.19884176890055338
+
+Test Result:
+
+macro_auc:0.6634408089817748, micro_auc:0.5946649982855889
+precision_mean:0.38835965026751923
+recall_mean:0.37433962264150944
+f1_mean:0.3812207775571638
+
+
+epoch 66 --------------------------
+
+Epoch 66, Average Loss: 22.85360804781971
+
+Test average Loss: 0.3233891311956912
+
+Valid Result:
+
+macro_auc:0.6615166733661905, micro_auc:0.5999900634807529
+precision_mean:0.3890323862507451
+recall_mean:0.37097385373247443
+f1_mean:0.3797885753079236
+
+Test average Loss: 0.16813663482666016
+
+Test Result:
+
+macro_auc:0.6622031982553142, micro_auc:0.5934962438059818
+precision_mean:0.38696164419426626
+recall_mean:0.3718238993710692
+f1_mean:0.37924177304509593
+
+
+epoch 67 --------------------------
+
+Epoch 67, Average Loss: 22.841221395241785
+
+Test average Loss: 0.386105440100845
+
+Valid Result:
+
+macro_auc:0.6605573256258856, micro_auc:0.60027952348953
+precision_mean:0.38526856240126384
+recall_mean:0.3696475937855248
+f1_mean:0.3772964610326823
+
+Test average Loss: 0.15548885345458985
+
+Test Result:
+
+macro_auc:0.6630872000947081, micro_auc:0.5953679061996898
+precision_mean:0.38593303919024136
+recall_mean:0.3740880503144654
+f1_mean:0.3799182422074604
+
+
+epoch 68 --------------------------
+
+Epoch 68, Average Loss: 22.82994648564859
+
+Test average Loss: 0.3084586201881876
+
+Valid Result:
+
+macro_auc:0.6579366393499152, micro_auc:0.5922373768814588
+precision_mean:0.387038158691702
+recall_mean:0.36320575975748387
+f1_mean:0.37474342683999606
+
+Test average Loss: 0.12700789133707682
+
+Test Result:
+
+macro_auc:0.6615094396936534, micro_auc:0.5941618345397844
+precision_mean:0.3905065815715995
+recall_mean:0.36943396226415093
+f1_mean:0.3796781074267985
+
+
+epoch 69 --------------------------
+
+Epoch 69, Average Loss: 22.81914538881218
+
+Test average Loss: 0.2801029828129982
+
+Valid Result:
+
+macro_auc:0.6596136834944265, micro_auc:0.5988556055815609
+precision_mean:0.3923201950426656
+recall_mean:0.3658582796513831
+f1_mean:0.37862745098039213
+
+Test average Loss: 0.21997548421223959
+
+Test Result:
+
+macro_auc:0.6612362581185924, micro_auc:0.5989519293999451
+precision_mean:0.39165886913514236
+recall_mean:0.36855345911949683
+f1_mean:0.3797550385587454
+
+
+epoch 70 --------------------------
+
+Epoch 70, Average Loss: 22.809180307198332
+
+Test average Loss: 0.1754634039742606
+
+Valid Result:
+
+macro_auc:0.6587466878061347, micro_auc:0.5990285547642715
+precision_mean:0.39021915584415584
+recall_mean:0.3643425539977264
+f1_mean:0.37683715461493245
+
+Test average Loss: 0.1608278274536133
+
+Test Result:
+
+macro_auc:0.6604439616916489, micro_auc:0.5990971968038993
+precision_mean:0.39086158381347985
+recall_mean:0.3669182389937107
+f1_mean:0.37851164601310583
+
+
+epoch 71 --------------------------
+
+Epoch 71, Average Loss: 22.7996626147236
+
+Test average Loss: 0.2027875939194037
+
+Valid Result:
+
+macro_auc:0.6581087866468686, micro_auc:0.5988741016371845
+precision_mean:0.39385820280296785
+recall_mean:0.3620689655172414
+f1_mean:0.3772951628825271
+
+Test average Loss: 0.17851384480794272
+
+Test Result:
+
+macro_auc:0.657954334073383, micro_auc:0.5929045252040112
+precision_mean:0.38898660533080776
+recall_mean:0.36163522012578614
+f1_mean:0.3748125937031484
+
+
+epoch 72 --------------------------
+
+Epoch 72, Average Loss: 22.79005957599655
+
+Test average Loss: 0.32212675834188653
+
+Valid Result:
+
+macro_auc:0.6546432998951065, micro_auc:0.5970450641206632
+precision_mean:0.3948425280067639
+recall_mean:0.35392194012883665
+f1_mean:0.37326406234389053
+
+Test average Loss: 0.19135265350341796
+
+Test Result:
+
+macro_auc:0.657408176616454, micro_auc:0.5921806310117772
+precision_mean:0.3954551752805875
+recall_mean:0.3589937106918239
+f1_mean:0.37634337706863585
+
+
+epoch 73 --------------------------
+
+Epoch 73, Average Loss: 22.781006471094383
+
+Test average Loss: 0.3238596040375379
+
+Valid Result:
+
+macro_auc:0.6522666457565749, micro_auc:0.5957914452187618
+precision_mean:0.39783315276273024
+recall_mean:0.34785903751420993
+f1_mean:0.37117153542909126
+
+Test average Loss: 0.201018918355306
+
+Test Result:
+
+macro_auc:0.6550141644917636, micro_auc:0.5969097676950286
+precision_mean:0.39764839212353026
+recall_mean:0.3530817610062893
+f1_mean:0.3740422413218735
+
+
+epoch 74 --------------------------
+
+Epoch 74, Average Loss: 22.77235729475895
+
+Test average Loss: 0.26353653109803493
+
+Valid Result:
+
+macro_auc:0.6547020903282172, micro_auc:0.5963175836301174
+precision_mean:0.3981639624252775
+recall_mean:0.3533535430087154
+f1_mean:0.37442280666532823
+
+Test average Loss: 0.1861947250366211
+
+Test Result:
+
+macro_auc:0.656192380831203, micro_auc:0.5909477347905193
+precision_mean:0.39663629992992294
+recall_mean:0.3559748427672956
+f1_mean:0.3752071594298973
+
+
+epoch 75 --------------------------
+
+Epoch 75, Average Loss: 22.764360327169715
+
+Test average Loss: 0.3027721911060567
+
+Valid Result:
+
+macro_auc:0.6532948447356566, micro_auc:0.5911912661398586
+precision_mean:0.39192900908514683
+recall_mean:0.35145888594164454
+f1_mean:0.37059234841674155
+
+Test average Loss: 0.17663647969563803
+
+Test Result:
+
+macro_auc:0.6564344040268996, micro_auc:0.5925038670605527
+precision_mean:0.3938679245283019
+recall_mean:0.3571069182389937
+f1_mean:0.37458767647446894
+
+
+epoch 76 --------------------------
+
+Epoch 76, Average Loss: 22.75709139683332
+
+Test average Loss: 0.2379262301386619
+
+Valid Result:
+
+macro_auc:0.6515537109550501, micro_auc:0.5960916308179152
+precision_mean:0.39275766016713093
+recall_mean:0.3472906403940887
+f1_mean:0.3686274509803922
+
+Test average Loss: 0.20377695719401043
+
+Test Result:
+
+macro_auc:0.6539013522194073, micro_auc:0.5909299366688113
+precision_mean:0.39089131042190556
+recall_mean:0.3519496855345912
+f1_mean:0.3703997881916865
+
+
+epoch 77 --------------------------
+
+Epoch 77, Average Loss: 22.74906842167159
+
+Test average Loss: 0.3501130707409917
+
+Valid Result:
+
+macro_auc:0.6534885344447425, micro_auc:0.5890811474302525
+precision_mean:0.394888178913738
+recall_mean:0.35126942023493746
+f1_mean:0.37180387045021557
+
+Test average Loss: 0.18558920542399088
+
+Test Result:
+
+macro_auc:0.655249766621013, micro_auc:0.5953539832411925
+precision_mean:0.39658818553503455
+recall_mean:0.3538364779874214
+f1_mean:0.37399454895964906
+
+
+epoch 78 --------------------------
+
+Epoch 78, Average Loss: 22.741565415583757
+
+Test average Loss: 0.298238890511649
+
+Valid Result:
+
+macro_auc:0.6501591373696262, micro_auc:0.5950203026028963
+precision_mean:0.3946910356832028
+recall_mean:0.34369079196665403
+f1_mean:0.36742961312537975
+
+Test average Loss: 0.20372383117675782
+
+Test Result:
+
+macro_auc:0.6527052310198835, micro_auc:0.5898388722511223
+precision_mean:0.39528907922912204
+recall_mean:0.34830188679245283
+f1_mean:0.3703109327983951
+
+
+epoch 79 --------------------------
+
+Epoch 79, Average Loss: 22.7343092895599
+
+Test average Loss: 0.32249939198396643
+
+Valid Result:
+
+macro_auc:0.6493533129157858, micro_auc:0.5947734389873859
+precision_mean:0.3940187731936258
+recall_mean:0.34198560060629024
+f1_mean:0.3661628968455219
+
+Test average Loss: 0.29979047139485676
+
+Test Result:
+
+macro_auc:0.652576522484654, micro_auc:0.5962077895126946
+precision_mean:0.3944705714692889
+recall_mean:0.34817610062893084
+f1_mean:0.36988040355448654
+
+
+epoch 80 --------------------------
+
+Epoch 80, Average Loss: 22.72781213631193
+
+Test average Loss: 0.3220828309351084
+
+Valid Result:
+
+macro_auc:0.648646445317678, micro_auc:0.5930462051634351
+precision_mean:0.39628893306825713
+recall_mean:0.3399014778325123
+f1_mean:0.3659357470678225
+
+Test average Loss: 0.14788824717203777
+
+Test Result:
+
+macro_auc:0.6511107184048092, micro_auc:0.5949250680988292
+precision_mean:0.39784789879307836
+recall_mean:0.3441509433962264
+f1_mean:0.36905645106899576
+
+
+epoch 81 --------------------------
+
+Epoch 81, Average Loss: 22.72193137393055
+
+Test average Loss: 0.24254405741788904
+
+Valid Result:
+
+macro_auc:0.6460964534815226, micro_auc:0.592746277660073
+precision_mean:0.39275394532118246
+recall_mean:0.334785903751421
+f1_mean:0.3614605707272169
+
+Test average Loss: 0.2312035115559896
+
+Test Result:
+
+macro_auc:0.6495455944434564, micro_auc:0.5958456604564605
+precision_mean:0.3951048951048951
+recall_mean:0.3411320754716981
+f1_mean:0.3661401377075739
+
+
+epoch 82 --------------------------
+
+Epoch 82, Average Loss: 22.71629504473561
+
+Test average Loss: 0.4223274308807996
+
+Valid Result:
+
+macro_auc:0.6467704122610962, micro_auc:0.5934030940633399
+precision_mean:0.3975741239892183
+recall_mean:0.3353543008715423
+f1_mean:0.36382322713257964
+
+Test average Loss: 0.2128204345703125
+
+Test Result:
+
+macro_auc:0.649065046746803, micro_auc:0.5941570493362088
+precision_mean:0.3984640378083001
+recall_mean:0.33937106918238996
+f1_mean:0.3665511853814279
+
+
+epoch 83 --------------------------
+
+Epoch 83, Average Loss: 22.71005360918691
+
+Test average Loss: 0.3432180832843391
+
+Valid Result:
+
+macro_auc:0.6451665585578058, micro_auc:0.5919842082473299
+precision_mean:0.3962904320289527
+recall_mean:0.3319439181508147
+f1_mean:0.36127435818125575
+
+Test average Loss: 0.2857547251383464
+
+Test Result:
+
+macro_auc:0.6485930604720792, micro_auc:0.5943416192237629
+precision_mean:0.399405646359584
+recall_mean:0.33811320754716984
+f1_mean:0.3662125340599455
+
+
+epoch 84 --------------------------
+
+Epoch 84, Average Loss: 22.70494493355314
+
+Test average Loss: 0.21668173342334981
+
+Valid Result:
+
+macro_auc:0.646760236255365, micro_auc:0.5929302870837531
+precision_mean:0.39936751750621186
+recall_mean:0.33497536945812806
+f1_mean:0.36434827408552295
+
+Test average Loss: 0.15165117899576822
+
+Test Result:
+
+macro_auc:0.6482540634435499, micro_auc:0.5935791898876035
+precision_mean:0.399970162613755
+recall_mean:0.33723270440251574
+f1_mean:0.36593189108032487
+
+
+epoch 85 --------------------------
+
+Epoch 85, Average Loss: 22.700223469639205
+
+Test average Loss: 0.39383864889339526
+
+Valid Result:
+
+macro_auc:0.6470108731965237, micro_auc:0.5927604755872875
+precision_mean:0.40131578947368424
+recall_mean:0.33516483516483514
+f1_mean:0.3652694610778443
+
+Test average Loss: 0.20924566904703776
+
+Test Result:
+
+macro_auc:0.6482151256584808, micro_auc:0.5936568033196927
+precision_mean:0.402133092984828
+recall_mean:0.33672955974842766
+f1_mean:0.36653659204490996
+
+
+epoch 86 --------------------------
+
+Epoch 86, Average Loss: 22.694855743195433
+
+Test average Loss: 0.30872524027921716
+
+Valid Result:
+
+macro_auc:0.6454315955070746, micro_auc:0.592189288188505
+precision_mean:0.3993617506268521
+recall_mean:0.3319439181508147
+f1_mean:0.3625452664252457
+
+Test average Loss: 0.19643257141113282
+
+Test Result:
+
+macro_auc:0.6470273601876941, micro_auc:0.5930747961909361
+precision_mean:0.3998496240601504
+recall_mean:0.33446540880503145
+f1_mean:0.36424657534246574
+
+
+epoch 87 --------------------------
+
+Epoch 87, Average Loss: 22.689859705617227
+
+Test average Loss: 0.3737482343401228
+
+Valid Result:
+
+macro_auc:0.6462542007703659, micro_auc:0.5920550702880747
+precision_mean:0.3992748697031498
+recall_mean:0.33383857521788557
+f1_mean:0.3636363636363636
+
+Test average Loss: 0.12402840932210286
+
+Test Result:
+
+macro_auc:0.646374474073392, micro_auc:0.5918766029289002
+precision_mean:0.3967090501121915
+recall_mean:0.33358490566037735
+f1_mean:0.36241885889989756
+
+
+epoch 88 --------------------------
+
+Epoch 88, Average Loss: 22.685101999229644
+
+Test average Loss: 0.4139046960947465
+
+Valid Result:
+
+macro_auc:0.6452733106179285, micro_auc:0.5923051473918363
+precision_mean:0.3994521798676101
+recall_mean:0.33156498673740054
+f1_mean:0.3623563515891914
+
+Test average Loss: 0.18612672170003255
+
+Test Result:
+
+macro_auc:0.6471632718055957, micro_auc:0.5929759120554869
+precision_mean:0.40015037593984965
+recall_mean:0.3347169811320755
+f1_mean:0.36452054794520555
+
+
+epoch 89 --------------------------
+
+Epoch 89, Average Loss: 22.680559505979378
+
+Test average Loss: 0.30345352328553493
+
+Valid Result:
+
+macro_auc:0.6471847484944503, micro_auc:0.5931695162955788
+precision_mean:0.4014052583862194
+recall_mean:0.33554376657824936
+f1_mean:0.36553147574819395
+
+Test average Loss: 0.1912334187825521
+
+Test Result:
+
+macro_auc:0.6478585943997067, micro_auc:0.5941177756998768
+precision_mean:0.39857015192135836
+recall_mean:0.3366037735849057
+f1_mean:0.3649754500818331
+
+
+epoch 90 --------------------------
+
+Epoch 90, Average Loss: 22.67654934062426
+
+Test average Loss: 0.39179039001464844
+
+Valid Result:
+
+macro_auc:0.6454946099425644, micro_auc:0.5915624824189162
+precision_mean:0.406046511627907
+recall_mean:0.3308071239105722
+f1_mean:0.3645855084568804
+
+Test average Loss: 0.2219909922281901
+
+Test Result:
+
+macro_auc:0.6441930964906768, micro_auc:0.5900717997244052
+precision_mean:0.4016962220508867
+recall_mean:0.32767295597484275
+f1_mean:0.3609282992726013
+
+
+epoch 91 --------------------------
+
+Epoch 91, Average Loss: 22.672486279590196
+
+Test average Loss: 0.3069679104551977
+
+Valid Result:
+
+macro_auc:0.6435118248258597, micro_auc:0.5910863893271837
+precision_mean:0.40422039859320047
+recall_mean:0.3266388783630163
+f1_mean:0.36131195640783825
+
+Test average Loss: 0.16275070190429688
+
+Test Result:
+
+macro_auc:0.6439719005267719, micro_auc:0.5912017393504677
+precision_mean:0.4016988416988417
+recall_mean:0.32716981132075473
+f1_mean:0.36062391681109185
+
+
+epoch 92 --------------------------
+
+Epoch 92, Average Loss: 22.668667375329008
+
+Test average Loss: 0.3372528309724769
+
+Valid Result:
+
+macro_auc:0.6449028272092723, micro_auc:0.5912949073052549
+precision_mean:0.40493367465673724
+recall_mean:0.32967032967032966
+f1_mean:0.3634464751958224
+
+Test average Loss: 0.1493935267130534
+
+Test Result:
+
+macro_auc:0.6453699544908588, micro_auc:0.5917931951777363
+precision_mean:0.40254562183714154
+recall_mean:0.330188679245283
+f1_mean:0.36279455462649435
+
+
+epoch 93 --------------------------
+
+Epoch 93, Average Loss: 22.66510567247155
+
+Test average Loss: 0.34079407672492823
+
+Valid Result:
+
+macro_auc:0.6426088867173251, micro_auc:0.59054149629919
+precision_mean:0.40539900544636515
+recall_mean:0.32436528988253127
+f1_mean:0.36038311756657193
+
+Test average Loss: 0.1854214096069336
+
+Test Result:
+
+macro_auc:0.6431667619669338, micro_auc:0.5905081663829329
+precision_mean:0.4047656372472174
+recall_mean:0.3247798742138365
+f1_mean:0.36038802428641215
+
+
+epoch 94 --------------------------
+
+Epoch 94, Average Loss: 22.661503681623604
+
+Test average Loss: 0.33797941402513154
+
+Valid Result:
+
+macro_auc:0.64402803631659, micro_auc:0.5912174916242724
+precision_mean:0.4024163568773234
+recall_mean:0.32815460401667296
+f1_mean:0.36151116677102907
+
+Test average Loss: 0.18857503255208333
+
+Test Result:
+
+macro_auc:0.6435575389134266, micro_auc:0.5907335171830707
+precision_mean:0.39800918836140886
+recall_mean:0.3269182389937107
+f1_mean:0.35897790055248613
+
+
+epoch 95 --------------------------
+
+Epoch 95, Average Loss: 22.65786038166973
+
+Test average Loss: 0.37730979919433594
+
+Valid Result:
+
+macro_auc:0.6429620517162276, micro_auc:0.5898221996785505
+precision_mean:0.4077069457659372
+recall_mean:0.32474422129594543
+f1_mean:0.36152710398650073
+
+Test average Loss: 0.19008145650227865
+
+Test Result:
+
+macro_auc:0.6424815648272028, micro_auc:0.5888178049126126
+precision_mean:0.4066212577221606
+recall_mean:0.3228930817610063
+f1_mean:0.3599523241954708
+
+
+epoch 96 --------------------------
+
+Epoch 96, Average Loss: 22.65453145418509
+
+Test average Loss: 0.21325490912612605
+
+Valid Result:
+
+macro_auc:0.6408131865059866, micro_auc:0.5896182077753835
+precision_mean:0.4058597502401537
+recall_mean:0.32019704433497537
+f1_mean:0.35797500529548826
+
+Test average Loss: 0.16501839955647787
+
+Test Result:
+
+macro_auc:0.6401862555044422, micro_auc:0.5892321282914835
+precision_mean:0.40142630744849445
+recall_mean:0.31861635220125784
+f1_mean:0.35525946704067324
+
+
+epoch 97 --------------------------
+
+Epoch 97, Average Loss: 22.650851257293823
+
+Test average Loss: 0.12949972736592197
+
+Valid Result:
+
+macro_auc:0.6443668013073826, micro_auc:0.5907476909350561
+precision_mean:0.40348837209302324
+recall_mean:0.32872300113679426
+f1_mean:0.36228857799122993
+
+Test average Loss: 0.12235070546468099
+
+Test Result:
+
+macro_auc:0.64342903607139, micro_auc:0.5905727564316791
+precision_mean:0.4018300248138958
+recall_mean:0.3259119496855346
+f1_mean:0.3599110987637172
+
+
+epoch 98 --------------------------
+
+Epoch 98, Average Loss: 22.64747209282985
+
+Test average Loss: 0.20482612142757495
+
+Valid Result:
+
+macro_auc:0.6435094440245188, micro_auc:0.5905509306636196
+precision_mean:0.4062278839348903
+recall_mean:0.32625994694960214
+f1_mean:0.3618787433014606
+
+Test average Loss: 0.15109137217203775
+
+Test Result:
+
+macro_auc:0.6419544648764226, micro_auc:0.5898211420685905
+precision_mean:0.40346456692913385
+recall_mean:0.3222641509433962
+f1_mean:0.3583216783216784
+
+
+epoch 99 --------------------------
+
+Epoch 99, Average Loss: 22.644291915741576
+
+Test average Loss: 0.24623002811354033
+
+Valid Result:
+
+macro_auc:0.6417586718384839, micro_auc:0.5900810812650605
+precision_mean:0.40212264150943394
+recall_mean:0.32303902993558165
+f1_mean:0.3582685438117252
+
+Test average Loss: 0.15476842244466146
+
+Test Result:
+
+macro_auc:0.64195582321568, micro_auc:0.5901926037649652
+precision_mean:0.4014084507042254
+recall_mean:0.32264150943396225
+f1_mean:0.3577405857740586
+
+Best Eval Epoch:19, best_Macro_auc:0.7227318758425926
+Best Test Epoch:19, best_Macro_auc:0.7232835071822904
