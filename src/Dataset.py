@@ -1,6 +1,7 @@
 import torch
 from torch.utils.data import TensorDataset
 
+
 def del_tensor_ele(arr: torch.tensor, index):
     """
     删除指定位置的一维tensor元素

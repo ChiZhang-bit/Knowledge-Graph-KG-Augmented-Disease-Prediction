@@ -229,3 +229,40 @@ class Retain(nn.Module):
 
         output = self.output(c)  # (batch_size, output_dim)
         return self.out_activation(output)
+
+class LSTM_Model(nn.Module):
+    def __init__(self, input_dim, hidden_dim, output_dim, bi_direction=False, activation="sigmoid"):
+        super(LSTM_Model, self).__init__()
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.output_dim = output_dim
+        self.bi_direction = bi_direction
+        self.bi = 1  # 默认为单向LSTM
+        if self.bi_direction:
+            self.bi = 2
+        
+        # x_input: (batch_size, seq_length, input_size)
+        self.LSTM = nn.LSTM(
+            input_size=self.input_dim,
+            hidden_size=hidden_dim,
+            num_layers=1,
+            batch_first=True,
+            bidirectional=self.bi_direction
+        )
+        
+        self.output = nn.Linear(self.hidden_dim, self.output_dim)
+        
+        if activation == 'sigmoid':
+            self.out_activation = nn.Sigmoid()
+        else:
+            self.out_activation = nn.Softmax(1)
+    
+    def forward(self, x):
+        self.LSTM.flatten_parameters()
+
+        lstm_in = x  # input: (batch_size, seq_length(visit_num), input_size)
+        lstm_out, _ = self.LSTM(lstm_in)  # (batch_size, seq_length, bi*hidden_size)
+
+        c = torch.sum(lstm_out, dim=1)  # (batch_size, bi*hidden_size)
+        output = self.output(c)  # (batch_size, output_dim)
+        return self.out_activation(output)

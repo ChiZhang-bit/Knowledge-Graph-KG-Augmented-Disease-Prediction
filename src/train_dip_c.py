@@ -13,7 +13,7 @@ from utils import llprint, get_accuracy
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', type=str, default="Dip_l", choices=["Dip_l", "Dip_g", "Dip_c"],
+parser.add_argument('--model', type=str, default="Dip_l", choices=["Dip_l", "Dip_g", "Dip_c", "Retain", "LSTM"],
                     help="model")
 parser.add_argument("--input_dim", type=int, default=2850, help="input_dim (feature_size)")
 parser.add_argument("--hidden_dim", type=int, default=128, help="hidden_dim")

@@ -7,13 +7,13 @@ import torch.optim as optim
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 from torch.utils.data import DataLoader
 from Dataset import DiseasePredDataset, read_data
-from model import Dip_l, Dip_c, Dip_g, Retain
+from model import Dip_l, Dip_c, Dip_g, Retain, LSTM_Model
 from utils import llprint, get_accuracy
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', type=str, default="Dip_l", choices=["Dip_l", "Dip_g", "Dip_c", "Retain", "LSTM"],
+parser.add_argument('--model', type=str, default="LSTM", choices=["Dip_l", "Dip_g", "Dip_c", "Retain", "LSTM"],
                     help="model")
 parser.add_argument("--input_dim", type=int, default=2850, help="input_dim (feature_size)")
 parser.add_argument("--hidden_dim", type=int, default=128, help="hidden_dim")
@@ -168,12 +168,18 @@ def main():
                       output_dim=output_dim,
                       max_timesteps=10,  # 这里不知道max_timesteps具体的作用
                       bi_direction=args.bi_direction)  # 默认为True
-    else:  # model: Retain
+    elif args.model == "Retain":  # model: Retain
         model = Retain(
             input_dim=input_dim,
             hidden_dim=args.hidden_dim,
             output_dim=output_dim,
             device=device
+        )
+    else:
+        model = LSTM_Model(
+            input_dim=input_dim,
+            hidden_dim=args.hidden_dim,
+            output_dim=output_dim
         )
 
     epoch = 100
@@ -233,63 +239,5 @@ def main():
             # torch.save(model.state_dict(), model_file)
     print(f"Best Eval Epoch:{best_eval_epoch}, best_Macro_auc:{best_eval_macro_auc}")
     print(f"Best Test Epoch:{best_test_epoch}, best_Macro_auc:{best_test_macro_auc}")
-
-
-# y_test = [0, 0, 1, 0, 1]
-# y_predict = [0, 1, 1, 0, 0]
-#
-# print('准确率:', accuracy_score(y_test, y_predict))  # 预测准确率输出
-#
-# print('宏平均精确率:', precision_score(y_test, y_predict, average='macro'))  # 预测宏平均精确率输出
-# print('微平均精确率:', precision_score(y_test, y_predict, average='micro'))  # 预测微平均精确率输出
-#
-# print('宏平均召回率:', recall_score(y_test, y_predict, average='macro'))  # 预测宏平均召回率输出
-# print('微平均召回率:', recall_score(y_test, y_predict, average='micro'))  # 预测微平均召回率输出
-#
-# print('宏平均F1-score:', f1_score(y_test, y_predict, labels=[0, 1], average='macro'))  # 预测宏平均f1-score输出
-# print('微平均F1-score:', f1_score(y_test, y_predict, labels=[0, 1], average='micro'))  # 预测微平均f1-score输出
-
-# calc macro average:
-# y_test = [
-#     [1, 0, 0, 0, 1, 1, 1, 0],
-#     [1, 0, 0, 0, 1, 1, 1, 0],
-#     [1, 0, 0, 0, 1, 1, 1, 0],
-#     [1, 0, 0, 0, 1, 1, 1, 0],
-#     [1, 0, 0, 0, 1, 1, 1, 0],
-# ]
-# y_pred = [
-#     [1, 0, 0, 0, 1, 1, 1, 0],
-#     [1, 0, 0, 0, 1, 1, 1, 0],
-#     [1, 0, 0, 0, 1, 1, 1, 0],
-#     [1, 0, 0, 0, 1, 1, 1, 0],
-#     [1, 0, 0, 0, 1, 1, 1, 0],
-# ]
-# y_test = np.array(y_test)
-# y_pred = np.array(y_pred)
-#
-# y_marco_label = y_test.T
-# y_marco_pred = y_pred.T
-#
-# print(y_marco_label)
-# print(y_marco_pred)
-#
-# macro_acc = []
-# macro_precision = []
-# macro_recall = []
-# macro_f1 = []
-#
-# for i in range(len(y_marco_pred)):
-#     y_pred_i = y_marco_pred[i]  # 第i个疾病的预测
-#     y_label_i = y_marco_label[i]  # 第i个疾病的标签
-#
-#     macro_acc.append(accuracy_score(y_label_i, y_pred_i))
-#     macro_precision.append(precision_score(y_label_i, y_pred_i, average="micro"))
-#     macro_recall.append(recall_score(y_label_i, y_pred_i, average="micro"))
-#     macro_f1.append(f1_score(y_label_i, y_pred_i, average="micro"))
-#
-# macro_acc = np.mean(macro_acc)
-# macro_precision = np.mean(macro_precision)
-# macro_recall = np.mean(macro_recall)
-# macro_f1 = np.mean(macro_f1)
 
 main()

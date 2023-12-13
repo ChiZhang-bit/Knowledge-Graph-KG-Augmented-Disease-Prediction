@@ -13,7 +13,7 @@ from utils import llprint, get_accuracy
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', type=str, default="Retain", choices=["Dip_l", "Dip_g", "Dip_c", "Retain"],
+parser.add_argument('--model', type=str, default="Dip_l", choices=["Dip_l", "Dip_g", "Dip_c", "Retain", "LSTM"],
                     help="model")
 parser.add_argument("--input_dim", type=int, default=2850, help="input_dim (feature_size)")
 parser.add_argument("--hidden_dim", type=int, default=128, help="hidden_dim")
@@ -161,19 +161,12 @@ def main():
                       hidden_dim=args.hidden_dim,
                       output_dim=output_dim,
                       bi_direction=args.bi_direction)  # 默认为True
-    elif args.model == "Dip_c":  # model: "Dip_c"
+    else:  # model: "Dip_c"
         model = Dip_c(input_dim=input_dim,
                       hidden_dim=args.hidden_dim,
                       output_dim=output_dim,
                       max_timesteps=10,  # 这里不知道max_timesteps具体的作用
                       bi_direction=args.bi_direction)  # 默认为True
-    else:  # model: Retain
-        model = Retain(
-            input_dim=input_dim,
-            hidden_dim=args.hidden_dim,
-            output_dim=output_dim,
-            device=device
-        )
 
     epoch = 100
     loss_fn = nn.CrossEntropyLoss()
