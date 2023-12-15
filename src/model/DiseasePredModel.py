@@ -54,6 +54,7 @@ class DiseasePredModel(nn.Module):
             dropout=0.1 
         )
 
+        self.out_linear = nn.Linear(output_dim, output_dim, bias=False)
         self.out_activation = nn.Sigmoid()
     
     def forward(self, x, adj):
@@ -77,9 +78,9 @@ class DiseasePredModel(nn.Module):
         kg_out = self.Wkg(pkgat_out)  # (batch_size, output_dim)
 
         final = lstm_out + kg_out  # (batch_size, output_dim)
-        
-        # 返回三个值 为了分开计算loss
-        return self.out_activation(lstm_out), self.out_activation(kg_out), self.out_activation(final)
+        final = self.out_linear(final)  # (batch_size, output_dim)
+
+        return self.out_activation(final)
 
 
         

@@ -94,6 +94,8 @@ def main():
 
     features, labels = read_data(feature_file="../data/features_one_hot.pt",
                                  label_file='../data/label_one_hot.pt')
+    
+    adj = torch.zeros(size = (2850, 2850))
     with open('../data/adjacent_matrix.pkl', 'rb') as f:
         adj = pickle.load(f)
 
@@ -123,10 +125,10 @@ def main():
     )
 
     epoch = 100
-    loss_kg = nn.CrossEntropyLoss()
+    loss_fn = regularization_loss
     optimzer = optim.Adam(model.parameters(), lr=args.lr)
     model = model.to(device)
-    adj = torch.zeros(size = (2850, 2850))
+
 
     best_eval_macro_auc = 0
     best_eval_epoch = 0
@@ -141,16 +143,11 @@ def main():
             x, y = batch
             x, y = x.to(device), y.to(device)
             optimzer.zero_grad()
-            lstm_out, kg_out, output = model(x, adj)
+            output = model(x, adj)
             
-            lstm_loss = regularization_loss(lstm_out, y, adj, beta=args.beta, batch_size=args.batch_size)
-            pkgat_loss = loss_kg(kg_out, y)
-
-            # 这里还需要补充邻接矩阵的信息，之前只使用CrossEntropyLoss
-            # loss = kg_loss(output, y, model, adj, beta=args.beta, batch_size=args.batch_size)
-            # loss = loss_fn(output, y)
-            loss = lstm_loss + pkgat_loss
+            loss = loss_fn(output, y, model, adj, args.beta, args.batch_size)
             loss.backward()
+
             optimzer.step()
             llprint('\rtraining step: {} / {}'.format(idx, len(train_loader)))
             input()
