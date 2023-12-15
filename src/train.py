@@ -8,7 +8,7 @@ import pickle
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 from torch.utils.data import DataLoader
 from Dataset import DiseasePredDataset, read_data
-from model import Dip_l, Dip_c, Dip_g, Retain, LSTM_Model
+from model.DiseasePredModel import DiseasePredModel
 from utils import llprint, get_accuracy
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
@@ -48,10 +48,10 @@ def evaluate(eval_model, dataloader, device):
         for idx, batch in enumerate(dataloader):
             visit, dignose = batch
             visit, dignose = visit.to(device), dignose.to(device)
-            outputs = eval_model(visit)
-            loss = loss_fn(outputs, dignose)
+            lstm_out, kg_out, output = eval_model(visit)
+            loss = loss_fn(output, dignose)
             y_label.extend(np.array(dignose.data.cpu()))  # 放到正确的label中
-            y_pred.extend(np.array(outputs.data.cpu()))
+            y_pred.extend(np.array(output.data.cpu()))
             # llprint('\rtest step: {} / {}'.format(idx, len(dataloader)))
     total_loss += loss.item()
     avg_loss = total_loss / len(dataloader)
@@ -61,7 +61,7 @@ def evaluate(eval_model, dataloader, device):
     return macro_auc, micro_auc, precision_mean, recall_mean, f1_mean
 
 
-def kg_loss(output, target, model, adj, beta, batch_size):
+def regularization_loss(output, target, model, adj, beta, batch_size):
     """
     增添的知识图谱关系的loss
     A: 关系邻接矩阵
@@ -82,7 +82,7 @@ def kg_loss(output, target, model, adj, beta, batch_size):
     # A: (input_size , input_size) 01matrix
     for i in range(W_ir.shape[0]):
         for j in range(i, W_ir.shape[0]):
-            if adj[i, j] == 1:
+            if adj[i, j] != 0:
                 for weight in W_matrix:
                     relationship_loss += torch.norm(weight[i] - weight[j], 2) ** 2
     total_loss = loss1 + (beta / batch_size) * relationship_loss  # 这里要除以batch_size
@@ -94,6 +94,8 @@ def main():
 
     features, labels = read_data(feature_file="../data/features_one_hot.pt",
                                  label_file='../data/label_one_hot.pt')
+    with open('../data/adjacent_matrix.pkl', 'rb') as f:
+        adj = pickle.load(f)
 
     split_train_point = int(len(features) * 6.7 / 10)
     split_test_point = int(len(features) * 8.7 / 10)
@@ -111,37 +113,21 @@ def main():
 
     input_dim = args.input_dim  # feature
     output_dim = args.output_dim
-    if args.model == "Dip_l":
-        model = Dip_l(input_dim=input_dim,
-                      hidden_dim=args.hidden_dim,
-                      output_dim=output_dim,
-                      bi_direction=args.bi_direction)  # 默认为True
-    elif args.model == "Dip_g":
-        model = Dip_g(input_dim=input_dim,
-                      hidden_dim=args.hidden_dim,
-                      output_dim=output_dim,
-                      bi_direction=args.bi_direction)  # 默认为True
-    elif args.model == "Dip_c":  # model: "Dip_c"
-        model = Dip_c(input_dim=input_dim,
-                      hidden_dim=args.hidden_dim,
-                      output_dim=output_dim,
-                      max_timesteps=10,  # 这里不知道max_timesteps具体的作用
-                      bi_direction=args.bi_direction)  # 默认为True
-    else:  # model: Retain
-        model = Retain(
-            input_dim=input_dim,
-            hidden_dim=args.hidden_dim,
-            output_dim=output_dim,
-            device=device
-        )
+    hidden_dim = args.hidden_dim
+    model = DiseasePredModel(
+        dipole_type=args.model,
+        input_dim=input_dim,
+        output_dim=output_dim,
+        hidden_dim=hidden_dim,
+        bi_direction=args.bi_direction
+    )
 
     epoch = 100
-    loss_fn = nn.CrossEntropyLoss()
+    loss_kg = nn.CrossEntropyLoss()
     optimzer = optim.Adam(model.parameters(), lr=args.lr)
     model = model.to(device)
     adj = torch.zeros(size = (2850, 2850))
-    with open('adjacent_matrix_01.pkl', 'rb') as f:
-        adj = pickle.load(f)
+
     best_eval_macro_auc = 0
     best_eval_epoch = 0
 
@@ -155,10 +141,15 @@ def main():
             x, y = batch
             x, y = x.to(device), y.to(device)
             optimzer.zero_grad()
-            output = model(x)
+            lstm_out, kg_out, output = model(x, adj)
+            
+            lstm_loss = regularization_loss(lstm_out, y, adj, beta=args.beta, batch_size=args.batch_size)
+            pkgat_loss = loss_kg(kg_out, y)
+
             # 这里还需要补充邻接矩阵的信息，之前只使用CrossEntropyLoss
-            loss = kg_loss(output, y, model, adj, beta=args.beta, batch_size=args.batch_size)
+            # loss = kg_loss(output, y, model, adj, beta=args.beta, batch_size=args.batch_size)
             # loss = loss_fn(output, y)
+            loss = lstm_loss + pkgat_loss
             loss.backward()
             optimzer.step()
             llprint('\rtraining step: {} / {}'.format(idx, len(train_loader)))
