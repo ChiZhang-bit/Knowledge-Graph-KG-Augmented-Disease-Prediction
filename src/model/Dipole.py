@@ -6,7 +6,7 @@ from torch.nn.parameter import Parameter
 
 class Dip_l(nn.Module):
     # Dipole - Location-based Attention
-    def __init__(self, input_dim, output_dim, hidden_dim, bi_direction=False, activation='sigmoid'):
+    def __init__(self, input_dim, output_dim, hidden_dim, bi_direction=False, device=torch.device('cuda'), activation='sigmoid'):
         super(Dip_l, self).__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim
@@ -54,7 +54,7 @@ class Dip_l(nn.Module):
 
 class Dip_g(nn.Module):
     # Dipole - General Attention
-    def __init__(self, input_dim, output_dim, hidden_dim, bi_direction=False, activation='sigmoid'):
+    def __init__(self, input_dim, output_dim, hidden_dim, bi_direction=False, device=torch.device('cuda'), activation='sigmoid'):
         super(Dip_g, self).__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim
@@ -75,7 +75,6 @@ class Dip_g(nn.Module):
             self.out_activation = nn.Sigmoid()
         else:
             self.out_activation = nn.Softmax(1)
-        # nn.init.kaiming_uniform_(self.attention_t_w,a=np.sqrt(5))
 
     def forward(self, x, verbose=False):
         self.rnn.flatten_parameters()
@@ -107,7 +106,7 @@ class Dip_g(nn.Module):
 
 class Dip_c(nn.Module):
     # Dipole - concatenation-based Attention
-    def __init__(self, input_dim, output_dim, hidden_dim, max_timesteps, bi_direction=False, activation='sigmoid'):
+    def __init__(self, input_dim, output_dim, hidden_dim, max_timesteps, bi_direction=False, device=torch.device('cuda'), activation='sigmoid'):
         super(Dip_c, self).__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim

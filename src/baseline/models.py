@@ -230,6 +230,7 @@ class Retain(nn.Module):
         output = self.output(c)  # (batch_size, output_dim)
         return self.out_activation(output)
 
+
 class LSTM_Model(nn.Module):
     def __init__(self, input_dim, hidden_dim, output_dim, bi_direction=False, activation="sigmoid"):
         super(LSTM_Model, self).__init__()
@@ -266,3 +267,57 @@ class LSTM_Model(nn.Module):
         c = torch.sum(lstm_out, dim=1)  # (batch_size, bi*hidden_size)
         output = self.output(c)  # (batch_size, output_dim)
         return self.out_activation(output)
+
+
+class Regular_Dip_g(nn.Module):
+    # Dipole - General Attention
+    def __init__(self, input_dim, output_dim, hidden_dim, bi_direction=False, activation='sigmoid'):
+        super(Dip_g, self).__init__()
+        self.input_dim = input_dim
+        self.output_dim = output_dim
+        self.hidden_dim = hidden_dim
+        self.bi_direction = bi_direction
+
+        self.bi = 1
+        if self.bi_direction:
+            self.bi = 2
+        self.rnn = nn.GRU(input_dim, self.hidden_dim, 1, bidirectional=self.bi_direction)
+
+        self.attention_t_w = Parameter(
+            torch.randn(self.hidden_dim * self.bi, self.hidden_dim * self.bi, requires_grad=True).float())
+        self.a_t_softmax = nn.Softmax(dim=1)
+
+        self.linear1 = nn.Linear(self.hidden_dim * 2 * self.bi, self.output_dim)
+        
+        if activation == 'sigmoid':
+            self.out_activation = nn.Sigmoid()
+        else:
+            self.out_activation = nn.Softmax(1)
+        # nn.init.kaiming_uniform_(self.attention_t_w,a=np.sqrt(5))
+
+    def forward(self, x, verbose=False):
+        self.rnn.flatten_parameters()
+        rnn_in = x.permute(1, 0, 2)  # (batch_size, visit_num, feature_size)
+        rnn_out, h = self.rnn(rnn_in)
+        rnn_out = rnn_out.permute(1, 0, 2)
+        out = rnn_out[:, :-1, :]
+        last_out = rnn_out[:, -1, :]
+        if verbose:
+            print("out", out.shape, '\n', out)
+
+        general_attention = torch.matmul(last_out, self.attention_t_w)
+        general_attention = torch.matmul(out, general_attention.unsqueeze(-1))
+        a_t_softmax_out = self.a_t_softmax(general_attention)
+        context = torch.mul(a_t_softmax_out, out)
+        sum_context = context.sum(dim=1)
+
+        if verbose:
+            print("general_attention", general_attention.shape, '\n', general_attention)
+            print("a_t_softmax_out", a_t_softmax_out.shape, '\n', a_t_softmax_out)
+            print("context", context.shape, '\n', context)
+
+        concat_input = torch.cat([last_out, sum_context], 1)  # (batch_size, 2*output_dim)
+
+        output = self.linear1(concat_input)
+        output = self.out_activation(output)
+        return output

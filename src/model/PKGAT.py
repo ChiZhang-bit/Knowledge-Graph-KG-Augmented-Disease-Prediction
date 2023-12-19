@@ -33,7 +33,7 @@ class Embedding(nn.Module):
 
 class GraphAttentionLayer(nn.Module):
 
-    def __init__(self, ninfeat, noutfeat, dropout, alpha, nrelation=11):
+    def __init__(self, ninfeat, noutfeat, dropout, alpha, nrelation=11, device=torch.device("cuda")):
         """
         ninfeat: 输入特征的维度
         noutfeat: 输出特征的维度
@@ -42,68 +42,66 @@ class GraphAttentionLayer(nn.Module):
 
         self.W = nn.ParameterList()
         
-        for _ in range(nrelation):
+        for _ in range(nrelation + 1):
             # 根据关系确定不同的W矩阵 
-            # W[0] - W[10]表示11种不同的关系
+            # W[0] - W[10]表示11种不同的关系 第12种表示虚关系
             self.W.append(nn.Parameter(torch.zeros(size=(ninfeat, noutfeat))))
+            # if _ is not nrelation:  # 虚关系的W默认是0
             nn.init.xavier_uniform_(self.W[-1].data, gain=1.414)
+        print('self.W.len:', len(self.W))
         
         self.linear = nn.Linear(2 * noutfeat, 1, bias=False)
         self.dropout = nn.Dropout(p=dropout)
         self.leakyrelu = nn.LeakyReLU(alpha)
+        self.device = device
 
-    def forward(self, x, n_index, w_index: dict):
+    def forward(self, feature_embed, neighbour_embed, w_index, indicator):
         '''
-        :param x:       feature_num, embed_size
-        :param adj:     邻接矩阵
-        :param n_index: 子图的节点集合
-        :param w_index: dict 采用的权重 (i,j) -> w_index 
-        :param feature_num: int 表示本身feature的个数 (不含neighbour)
+        :param feature_embed:   tensor(batch_size * 6 * neighbour_size * embedding_size)
+        :param neighbour_embed: tensor(batch_size * 6 * neighbour_size * embedding_size)
+        :param w_index: [batch_size * [6 * {neighbour_size}]]
+        :param indicator: tensor(batch_size, 6 , neighbour_size) 每次运算时mask掉的01 tensor
         :return:        FloatTensor B*F*(headxE2)
         '''
-        # x:  feature_num, embed_size
-        n_index = n_index.tolist()
-        h_list = []        
-        # 根据边的类别不同选择不同的W矩阵来运算
-        e_list = []
-        neighbour_temp_list = [] #  (relation_nums, 1)
-        for key, value in w_index.items():
-            neighbour_embed = x[n_index.index(key[1]), :].unsqueeze(dim = 0) # (1, embedding_size)  
-            # W: (ninfeat==embedding_size, noutfeat)
-            print(neighbour_embed.shape)
-            print(self.W[value].shape)
-            neighbour_temp = torch.matmul(neighbour_embed, self.W[value])  # (1, noutfeat) 
-            print("neighbour_temp.shape:", neighbour_temp.shape)
-            neighbour_temp_list.append(neighbour_temp)  
+        #拼W
+        W_matrix = []
+        # print(self.W[0])
+        # W = self.W
+        # W = W.to('cpu')
+        # print('W[0]:',W[0])
+        for batch in w_index:   # batch[6 * {neighbour_size}]
+            W_matrix_batch = []
+            for visit in batch: # visit{neighbour_size} neighbour_size个关系
+                W = self.W.to('cpu')
+                W_matrix_visit = [] # [neighbour_size * tensor(ninfeat * noutfeat)]
+                for v in visit.values():
+                    W_matrix_visit.append(W[int(v)])
+                W_matrix_visit = torch.stack(W_matrix_visit, dim = 0) # tensor(neighbour_size * ninfeat * noutfeat)
+                W_matrix_batch.append(W_matrix_visit)
+            W_matrix_batch = torch.stack(W_matrix_batch, dim = 0) #tensor(6 * neighbour_size * ninfeat * noutfeat)
+            W_matrix.append(W_matrix_batch)
+        W_matrix = torch.stack(W_matrix, dim = 0) #tensor(batch_size * 6 * neighbour_size * ninfeat * noutfeat)
+        W_matrix = W_matrix.cuda()
 
-            feature_embed = x[n_index.index(key[0]), :].unsqueeze(dim = 0)   # (1, embdedding_size)
-            feature_temp = torch.matmul(feature_embed, self.W[value])  # (1, noutfeat) 
-            # feature_temp = torch.matmul(feature_embed, self.W[value])
-            
-            # print(f'neighbour_temp:{neighbour_temp.shape},feature_temp:{feature_temp.shape}')
-            
-            # 拼接:
-            hh = torch.cat([feature_temp, neighbour_temp], dim=-1)  # (1, noutfeat*2)
-            print(f'hh:{hh.shape}')
-            e = self.leakyrelu(self.linear(hh))  # (1, 1)
-            print(f'e:{e.shape}')
-            e_list.append(e)
-        
-        attn = torch.cat(e_list, dim = 0) #  (relation_nums, 1)
-        attn = self.dropout(F.softmax(attn, dim=0)) #  (relation_nums, 1)
-        for i, neighbour_temp in enumerate(neighbour_temp_list):
-            print(attn[i].shape)  # (1)
-            print(neighbour_temp.shape) # (1, noutfeat)
+        # GAT Core:
 
-            h_list.append(torch.einsum("j, ij-> ij", attn[i], neighbour_temp))  # (1, noutfeat)
-        
-        hi = torch.cat(h_list, dim=1)  # (n, foutfeat)
-        return torch.sum(hi, dim=0)  # (outfeat)
+        # W_matrix: 
+        neighbour = torch.einsum('bvne, bvnef -> bvnf', neighbour_embed,W_matrix)    #tensor(batch_size * 6 * neighbour_size * noutfeat)
+        feature = torch.einsum('bvne, bvnef -> bvnf', feature_embed,W_matrix)    #tensor(batch_size * 6 * neighbour_size * noutfeat)
+        hh = torch.cat([neighbour, feature], dim = -1)  #tensor(batch_size * 6 * neighbour_size * (2 * noutfeat))
+        e = self.leakyrelu(self.linear(hh)) #tensor(batch_size * 6 * neighbour_size * 1)
+        attn = self.dropout(F.softmax(e, dim = -2)) #tensor(batch_size * 6 * neighbour_size * 1)
 
+        # mask掉虚边生成attn:
+        indicator = indicator.unsqueeze(dim=-1)  # tensor(batch_size * 6 * neighbour_size * 1)
+        attn =  torch.mul(indicator, attn)
+
+        h_list = torch.einsum("bvej,bveo->bvo", attn, neighbour) # (batch_size, neighbour_size, outfeat)
+        return h_list
 
 class GATModel(nn.Module):
 
-    def __init__(self, nfeat, nemb, gat_layers, gat_hid, dropout, alpha=0.2, nrelation=11):
+    def __init__(self, nfeat, nemb, gat_layers, gat_hid, dropout, alpha=0.2, nrelation=11, device=torch.device("cuda")):
         """
         nfeat: feature_size
         nemb: 每个特征的嵌入维度
@@ -112,10 +110,11 @@ class GATModel(nn.Module):
         """
         super().__init__()
 
-        self.embedding = Embedding(nfeat, nemb)
+        self.embedding = Embedding(nfeat+256, nemb) # 增加虚节点的embedding
         self.gat_layers = gat_layers
         self.gats = torch.nn.ModuleList()
         self.nrelation = nrelation
+        self.device = device
         ninfeat = nemb
         for _ in range(gat_layers):
             self.gats.append(
@@ -124,102 +123,41 @@ class GATModel(nn.Module):
                     noutfeat=gat_hid,
                     dropout=dropout, 
                     alpha=alpha,
-                    nrelation=self.nrelation
+                    nrelation=self.nrelation,
+                    device=self.device
                 )
             )
             # 第一层是embedding后的输出作为输入，之后是GATlayer的输出作为输入：
             ninfeat = gat_hid  
         self.dropout = nn.Dropout(p=dropout)
 
-    def forward(self, x, adj):
+    def forward(self, feature_index, neighbour_index, W_index, indicator):
         """
-        not supported for batch process
-        :param x:       (visit_size, feature_size)
-        :param adj:     FloatTensor F*F, default fully connected
+        feature_index : , #tensor(batch_size * 6 * 128)
+        neighbour_index: ,    #tensor(batch_size * 6 * 128)
+        batch_W_index: ,  #[batch_size * [6 * {128}]]
+        indicator: tensor(batch_size, 6 , 128) [1, ... , 0, ...]
         """
-        # 1. 找到每一个visit 把one-hot转换成index list
-        x_list = x.tolist()
-        visit_graph = []  # visit_graph表示n次visit涉及到的feature节点的index
-        W_index_list = []   # 将每个visit对应的图存进来
-        feature_num_list = []  # 存储的是每个visit中本来有的feature种类个数
-        for visit in x_list:
-            # visit: (feature_size)
-            feature_index = [i for i, value in enumerate(visit) if value != 0]
-            if len(feature_index) == 0:  # 若visit全为0就筛掉
-                continue
-            feature_num_list.append(len(feature_index))
-            # 根据临界矩阵扩展：
-            adj_index = []
-            w_index = {}
-            for i in feature_index:
-                for j in range(adj.shape[0]):
-                    if adj[i,j]!= 0:
-                        adj_index.append(j)
-                        w_index[(i, j)] = adj[i,j] - 1
-            W_index_list.append(w_index)
-            feature_index.extend(adj_index)
-            visit_graph.append(torch.tensor(feature_index))
-        # visit_graph: (useful_visit_size, feature_index)
-        # visit_graph:
-        # [ torch.tensor([2,3,4]), torch.tensor([5,6,7,8]), ... ]
 
-        # 2. embedding feature
-        visit_h = []    # visit_h: (visit_size, feature_num(不相同), embedding_size)
-        for visit in visit_graph:
-            visit_h.append(self.embedding(visit))  # (append进去的: feature_num, embed_size)
+        # 1. embedding feature
+        feature_embed = self.embedding(feature_index)  # tensor(batch_size * 6 * 128 * embedding_size)
+        neighbour_embed = self.embedding(neighbour_index)  # tensor(batch_size * 6 * 128 * embedding_size)
+
+        # mask 掉不存在的边和点
+        # feature_embed = feature_embed * indicator
+        # neighbour_embed = neighbour_embed * indicator
+
+        # print('feature_embed.shape:',feature_embed.shape)
+        # print('neighbour_embed.shape:',neighbour_embed.shape)
         
-        # 3. Graph Attention Layers
-        h_subgraph = []  # 所有visit对应的子图
+        # 2. Graph Attention Layers
         for l in range(self.gat_layers):
-            print(f"----------------No.{l}.gat_layers-----------------------")
-            for i, visit in enumerate(visit_h):
-                # 这里的visit_h[i] 是第i个子图的embedding: (feature_num ,embed_size)
-                h_v = self.gats[l](x = visit_h[i],
-                                   n_index = visit_graph[i], 
-                                   w_index = W_index_list[i])  # 这里获得一个子图 # (noutfeat)
-                h_subgraph.append(F.elu(self.dropout(h_v)).unsqueeze(0))  # (1, noutfeat)
-        
-        h_subgraph_embed = torch.cat(h_subgraph, dim=0) # (visit_num, noutfeat)
-        h = torch.mean(h_subgraph_embed, dim=0)  # (noutfeat)
-        return h
-        
-
-# batch_size = 2
-# feature_size = 5
-    
-# input: (visit_size, feature_size)
-
-# model = GATModel(
-#     nfeat=5,
-#     nemb=128,
-#     gat_layers=1,
-#     gat_hid=16, #  == noutfeat
-#     dropout=0.1
-# )
-
-# x = torch.tensor(
-#     [
-#         [1,0,0,1,0],
-#         [1,0,0,0,0],
-#     ],
-# )
-
-# adj = torch.tensor(
-#     [
-#         [1,0,0,1,0],
-#         [0,1,0,0,0],
-#         [0,0,0,0,0],
-#         [0,0,0,0,0],
-#         [0,0,0,0,1]
-#     ]
-# )
-
-# # 1. 找到每一个visit 把one-hot转换成index list
-# # 3. 根据index list 找到 neighbor
-# # 2. x =[ tensor([1, 4, 5]), tensor([2, 4, 6, 8]) ]
-
-# print(model(x, adj))
-
-# # [1*10, 0*others]
-# # 假设10个中心节点，55个
-
+            # print(f"----------------No.{l}.gat_layers-----------------------")
+            h_v = self.gats[l](feature_embed = feature_embed,
+                                neighbour_embed = neighbour_embed, 
+                                w_index = W_index,
+                                indicator = indicator)  # (batch_size, 6, outfeat)
+            
+            h_v = torch.mean(h_v, dim = 1)  #h_v: (batch_size, outfeat)
+                
+        return h_v

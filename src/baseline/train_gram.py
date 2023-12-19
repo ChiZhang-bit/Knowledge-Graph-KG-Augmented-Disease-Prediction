@@ -6,30 +6,22 @@ import torch.nn as nn
 import torch.optim as optim
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 from torch.utils.data import DataLoader
-from Dataset import DiseasePredDataset, read_data
-from models import Dip_l, Dip_c, Dip_g, Retain, LSTM_Model
+from Dataset import DiseasePredDataset, read_data, load_dataset
+from Gram import GRAM
 from utils import llprint, get_accuracy
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', type=str, default="Dip_g", choices=["Dip_l", "Dip_g", "Dip_c", "Retain", "LSTM"],
-                    help="model")
-parser.add_argument("--input_dim", type=int, default=2850, help="input_dim (feature_size)")
-parser.add_argument("--hidden_dim", type=int, default=128, help="hidden_dim")
+
+parser.add_argument("--input_dim", type=int, default=256, help="input_dim (feature_size)")
+parser.add_argument("--embed_dim", type=int, default=1024, help="embedding_dim")
+parser.add_argument("--hidden_dim", type=int, default=256, help="hidden_dim")
+parser.add_argument("--attn_dim", type=int, default=128, help="attention_dim")
 parser.add_argument("--output_dim", type=int, default=90, help="output_dim (disease_size)")
-parser.add_argument('--bi_direction', action="store_true", default=True, help="bi_direction")
 parser.add_argument('--batch_size', type=int, default=8, help="batch_size")
-parser.add_argument('--beta', type=float, default=0.5, help="KG factor in loss")
-parser.add_argument('--lr', type=float, default=1e-4, help="learning rate")
 
 args = parser.parse_args()
-
-saved_path = "../../saved_model/baseline/"
-model_name = args.model
-path = os.path.join(saved_path, model_name)
-if not os.path.exists(path):
-    os.makedirs(path)
 
 
 def evaluate(eval_model, dataloader, device):
@@ -45,11 +37,17 @@ def evaluate(eval_model, dataloader, device):
     total_loss = 0
     with torch.no_grad():
         for idx, batch in enumerate(dataloader):
-            visit, dignose = batch
-            visit, dignose = visit.to(device), dignose.to(device)
-            outputs = eval_model(visit)
-            loss = loss_fn(outputs, dignose)
-            y_label.extend(np.array(dignose.data.cpu()))  # 放到正确的label中
+            x, ancestors, indicator1, indicator2, y = batch
+            
+            x = x.to(device)
+            ancestors = ancestors.to(device)
+            indicator1 = indicator1.to(device)
+            indicator2 = indicator2.to(device)
+            y = y.to(device)
+
+            outputs = eval_model(x, ancestors, indicator1, indicator2)
+            loss = loss_fn(outputs, y)
+            y_label.extend(np.array(y.data.cpu()))  # 放到正确的label中
             y_pred.extend(np.array(outputs.data.cpu()))
             # llprint('\rtest step: {} / {}'.format(idx, len(dataloader)))
     total_loss += loss.item()
@@ -63,57 +61,29 @@ def evaluate(eval_model, dataloader, device):
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    features, labels = read_data(feature_file="../../data/features_one_hot.pt",
-                                 label_file='../../data/label_one_hot.pt')
+    features, ancestors, indicator1s, indicator2s, labels = read_data("../../data/ancestor_information.pkl",
+                                                              "../../data/label_one_hot.pt")
     
 
     split_train_point = int(len(features) * 6.7 / 10)
     split_test_point = int(len(features) * 8.7 / 10)
-    train_features, train_labels = features[:split_train_point], labels[:split_train_point]
-    test_features, test_labels = features[split_train_point:split_test_point], labels[split_train_point:split_test_point]
-    valid_features, valid_labels = features[split_test_point:], labels[split_test_point:]
 
-    train_data = DiseasePredDataset(train_features, train_labels)
-    test_data = DiseasePredDataset(test_features, test_labels)
-    valid_data = DiseasePredDataset(valid_features, valid_labels)
+    train_dataset, valid_dataset, test_dataset = load_dataset(features, ancestors, indicator1s, indicator2s, labels, split_train_point, split_test_point) 
 
-    train_loader = DataLoader(train_data, batch_size=args.batch_size, shuffle=True)
-    test_loader = DataLoader(test_data, batch_size=args.batch_size, shuffle=True)
-    valid_loader = DataLoader(valid_data, batch_size=args.batch_size, shuffle=True)
+    train_loader = DataLoader(train_dataset)
+    valid_loader = DataLoader(valid_dataset)
+    test_loader = DataLoader(test_dataset)
 
-    input_dim = args.input_dim  # feature
-    output_dim = args.output_dim
-    if args.model == "Dip_l":
-        model = Dip_l(input_dim=input_dim,
-                      hidden_dim=args.hidden_dim,
-                      output_dim=output_dim,
-                      bi_direction=args.bi_direction)  # 默认为True
-    elif args.model == "Dip_g":
-        model = Dip_g(input_dim=input_dim,
-                      hidden_dim=args.hidden_dim,
-                      output_dim=output_dim,
-                      bi_direction=args.bi_direction)  # 默认为True
-    elif args.model == "Dip_c":  # model: "Dip_c"
-        model = Dip_c(input_dim=input_dim,
-                      hidden_dim=args.hidden_dim,
-                      output_dim=output_dim,
-                      max_timesteps=10,  # 这里不知道max_timesteps具体的作用
-                      bi_direction=args.bi_direction)  # 默认为True
-    elif args.model == "Retain":  # model: Retain
-        model = Retain(
-            input_dim=input_dim,
-            hidden_dim=args.hidden_dim,
-            output_dim=output_dim,
-            device=device
-        )
-    else:
-        model = LSTM_Model(
-            input_dim=input_dim,
-            hidden_dim=args.hidden_dim,
-            output_dim=output_dim
-        )
+    model = GRAM(
+        input_dim=args.input_dim,
+        num_ancestors=72,
+        embed_dim=args.embed_dim,
+        hidden_dim=args.hidden_dim,
+        output_dim=args.output_dim,
+        attn_dim=args.attn_dim
+    )
 
-    epoch = 50
+    epoch=50
     loss_fn = nn.CrossEntropyLoss()
     optimzer = optim.Adam(model.parameters(), lr=args.lr)
     model = model.to(device)
@@ -128,10 +98,16 @@ def main():
         total_loss = 0
         model.train()
         for idx, batch in enumerate(train_loader):
-            x, y = batch
-            x, y = x.to(device), y.to(device)
+            x, ancestors, indicator1, indicator2, y = batch
+            
+            x = x.to(device)
+            ancestors = ancestors.to(device)
+            indicator1 = indicator1.to(device)
+            indicator2 = indicator2.to(device)
+            y = y.to(device)
+
             optimzer.zero_grad()
-            output = model(x)
+            output = model(x, ancestors, indicator1, indicator2)
             loss = loss_fn(output, y)
             
             loss.backward()

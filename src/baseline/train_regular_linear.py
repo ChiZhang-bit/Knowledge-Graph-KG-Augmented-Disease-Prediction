@@ -4,21 +4,22 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.optim as optim
+import pickle
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 from torch.utils.data import DataLoader
 from Dataset import DiseasePredDataset, read_data
-from models import Dip_l, Dip_c, Dip_g, Retain, LSTM_Model
+from models import Dip_l, Dip_c, Dip_g, Retain, LSTM_Model, Regular_Dip_g
 from utils import llprint, get_accuracy
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model', type=str, default="LSTM", choices=["Dip_l", "Dip_g", "Dip_c", "Retain", "LSTM"],
+parser.add_argument('--model', type=str, default="Dip_g", choices=["Dip_l", "Dip_g", "Dip_c", "Retain", "LSTM"],
                     help="model")
 parser.add_argument("--input_dim", type=int, default=2850, help="input_dim (feature_size)")
 parser.add_argument("--hidden_dim", type=int, default=128, help="hidden_dim")
 parser.add_argument("--output_dim", type=int, default=90, help="output_dim (disease_size)")
-parser.add_argument('--bi_direction', action="store_true", default=False, help="bi_direction")
+parser.add_argument('--bi_direction', action="store_true", default=True, help="bi_direction")
 parser.add_argument('--batch_size', type=int, default=8, help="batch_size")
 parser.add_argument('--beta', type=float, default=0.5, help="KG factor in loss")
 parser.add_argument('--lr', type=float, default=1e-4, help="learning rate")
@@ -60,13 +61,36 @@ def evaluate(eval_model, dataloader, device):
     return macro_auc, micro_auc, precision_mean, recall_mean, f1_mean
 
 
+def regular_linear_loss(output, target, model, adj, beta, batch_size):
+    """
+    增添的知识图谱关系的loss
+    A: 关系邻接矩阵
+    """
+    # 先计算原本的交叉熵loss
+    ce_loss = nn.CrossEntropyLoss()
+    loss1 = ce_loss(output, target)
+    
+    # Linear层的权重W
+    W = model.linear1.weight  # (output_size, self.hidden_dim*2*self.bi)
+    
+    # adj: (output_size , output_size)
+    regular_linear_loss = 0    
+    for i in range(W.shape[0]):
+        for j in range(i, W.shape[0]):
+            if adj[i, j] != 0:
+                regular_linear_loss += torch.norm(W[i] - W[j], 2) ** 2
+    total_loss = loss1 + (beta / batch_size) * regular_linear_loss  # 这里要除以batch_size
+    return total_loss
+
+
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     features, labels = read_data(feature_file="../../data/features_one_hot.pt",
                                  label_file='../../data/label_one_hot.pt')
     
-
+    adj = torch.load('../../data/dia_relation_adj.pt')
+    
     split_train_point = int(len(features) * 6.7 / 10)
     split_test_point = int(len(features) * 8.7 / 10)
     train_features, train_labels = features[:split_train_point], labels[:split_train_point]
@@ -83,38 +107,14 @@ def main():
 
     input_dim = args.input_dim  # feature
     output_dim = args.output_dim
-    if args.model == "Dip_l":
-        model = Dip_l(input_dim=input_dim,
-                      hidden_dim=args.hidden_dim,
-                      output_dim=output_dim,
-                      bi_direction=args.bi_direction)  # 默认为True
-    elif args.model == "Dip_g":
-        model = Dip_g(input_dim=input_dim,
-                      hidden_dim=args.hidden_dim,
-                      output_dim=output_dim,
-                      bi_direction=args.bi_direction)  # 默认为True
-    elif args.model == "Dip_c":  # model: "Dip_c"
-        model = Dip_c(input_dim=input_dim,
-                      hidden_dim=args.hidden_dim,
-                      output_dim=output_dim,
-                      max_timesteps=10,  # 这里不知道max_timesteps具体的作用
-                      bi_direction=args.bi_direction)  # 默认为True
-    elif args.model == "Retain":  # model: Retain
-        model = Retain(
-            input_dim=input_dim,
-            hidden_dim=args.hidden_dim,
-            output_dim=output_dim,
-            device=device
-        )
-    else:
-        model = LSTM_Model(
-            input_dim=input_dim,
-            hidden_dim=args.hidden_dim,
-            output_dim=output_dim
-        )
 
-    epoch = 100
-    loss_fn = nn.CrossEntropyLoss()
+    model = Dip_g(input_dim=input_dim,
+                    hidden_dim=args.hidden_dim,
+                    output_dim=output_dim,
+                    bi_direction=args.bi_direction)  # 默认为True
+
+    epoch = 50
+    loss_fn = regular_linear_loss
     optimzer = optim.Adam(model.parameters(), lr=args.lr)
     model = model.to(device)
 
@@ -132,9 +132,7 @@ def main():
             x, y = x.to(device), y.to(device)
             optimzer.zero_grad()
             output = model(x)
-            loss = loss_fn(output, y)
-            # 这里还需要补充邻接矩阵的信息，之前只使用CrossEntropyLoss
-            # loss = kg_loss(output, y, model, A=[1], beta=args.beta, batch_size=args.batch_size)
+            loss = loss_fn(output, y, model, adj, beta=args.beta, batch_size=args.batch_size)
             loss.backward()
             optimzer.step()
             # llprint('\rtraining step: {} / {}'.format(idx, len(train_loader)))
