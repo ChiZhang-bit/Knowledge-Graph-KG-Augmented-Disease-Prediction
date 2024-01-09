@@ -13,7 +13,7 @@ class Embedding(nn.Module):
         nemb: 嵌入向量的维度
         """
         super().__init__()
-        self.embedding = nn.Embedding(nfeat, nemb)  # 将输入特征映射到nemb维度  x: (*, nembedding_dim)
+        self.embedding = nn.Embedding(nfeat, nemb)  # 将输入特征映射到nemb维度  x: (*, nembedding_dim) 每轮epoch参数是否有变化？
         # 只要把他的邻居和他的embedding筛出来就行了
         nn.init.xavier_uniform_(self.embedding.weight)
         # print ("torch.min(torch.abs(self.embedding.weight)): ", torch.min(torch.abs(self.embedding.weight)))
@@ -48,7 +48,6 @@ class GraphAttentionLayer(nn.Module):
             self.W.append(nn.Parameter(torch.zeros(size=(ninfeat, noutfeat))))
             # if _ is not nrelation:  # 虚关系的W默认是0
             nn.init.xavier_uniform_(self.W[-1].data, gain=1.414)
-        print('self.W.len:', len(self.W))
         
         self.linear = nn.Linear(2 * noutfeat, 1, bias=False)
         self.dropout = nn.Dropout(p=dropout)
@@ -75,7 +74,11 @@ class GraphAttentionLayer(nn.Module):
                 W = self.W.to('cpu')
                 W_matrix_visit = [] # [neighbour_size * tensor(ninfeat * noutfeat)]
                 for v in visit.values():
-                    W_matrix_visit.append(W[int(v)])
+                    if int(v) < len(W):
+                        W_matrix_visit.append(W[int(v)])
+                    else:
+                        print(v)
+                        input()
                 W_matrix_visit = torch.stack(W_matrix_visit, dim = 0) # tensor(neighbour_size * ninfeat * noutfeat)
                 W_matrix_batch.append(W_matrix_visit)
             W_matrix_batch = torch.stack(W_matrix_batch, dim = 0) #tensor(6 * neighbour_size * ninfeat * noutfeat)
@@ -96,7 +99,7 @@ class GraphAttentionLayer(nn.Module):
         indicator = indicator.unsqueeze(dim=-1)  # tensor(batch_size * 6 * neighbour_size * 1)
         attn =  torch.mul(indicator, attn)
 
-        h_list = torch.einsum("bvej,bveo->bvo", attn, neighbour) # (batch_size, neighbour_size, outfeat)
+        h_list = torch.einsum("bvej,bveo->bvo", attn, neighbour) # (batch_size, 6, outfeat)
         return h_list
 
 class GATModel(nn.Module):

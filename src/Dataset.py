@@ -16,7 +16,6 @@ def del_tensor_ele(arr: torch.tensor, index):
 def read_data(feature_file, label_file, device):
     with open(feature_file, 'rb') as f:
         features = pickle.load(f)
-    # features = torch.load(feature_file)
     labels = torch.load(label_file) # every element in list : [1, 100]
     
     sum_tensor = torch.sum(torch.stack(labels).squeeze(dim=1), dim=0).to(device)
@@ -24,13 +23,12 @@ def read_data(feature_file, label_file, device):
     nums_disease = {i:num for i, num in enumerate(sum_tensor.tolist())}
     nums_disease = dict(sorted(nums_disease.items(), key=lambda item: item[1]))
     delete_index = list(nums_disease.keys())[0:10]
-    
     new_labels = []
     for i in tqdm(labels, total=len(labels)):
         i.to(device)
         label = torch.squeeze(i, dim=0)
-        for idx in delete_index:
-            label = del_tensor_ele(label, idx)
+        for i, idx in enumerate(delete_index):
+            label = del_tensor_ele(label, idx-i)
         new_labels.append(label)
     
     # print(len(features), len(new_labels))

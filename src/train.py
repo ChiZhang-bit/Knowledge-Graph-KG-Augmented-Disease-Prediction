@@ -13,6 +13,9 @@ from utils import llprint, get_accuracy, load_W_index
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
+torch.manual_seed(0)
+np.random.seed(0)
+
 saved_path = "../saved_model/"
 model_name = "Our_model"
 path = os.path.join(saved_path, model_name)
@@ -20,7 +23,7 @@ if not os.path.exists(path):
     os.makedirs(path)
 
 
-def evaluate(eval_model, dataloader, adj, W_index_list, device, only_dipole):
+def evaluate(eval_model, dataloader, adj, W_index_list, device, only_dipole, p):
     """
     在一次batch中
     y_pred: (batch_size, dignosis_size)
@@ -36,7 +39,7 @@ def evaluate(eval_model, dataloader, adj, W_index_list, device, only_dipole):
             x1, visit_index, adj_index, indicator, y = batch
             x1, visit_index, adj_index, indicator, y = x1.to(device), visit_index.to(device), adj_index.to(device), indicator.to(device), y.to(device)
             w_index = W_index_list[idx * args.batch_size : (idx + 1) * args.batch_size]
-            output = eval_model(x1, visit_index, adj_index, w_index, indicator, only_dipole)
+            output = eval_model(x1, visit_index, adj_index, w_index, indicator, only_dipole, p)
             
             loss = loss_fn(output, y, eval_model, adj, args.beta, args.batch_size)
             y_label.extend(np.array(y.data.cpu()))  # 放到正确的label中
@@ -108,11 +111,12 @@ def main(args, features, labels, adj):
         input_dim=input_dim,
         output_dim=output_dim,
         hidden_dim=hidden_dim,
+        embed_dim=512,
         bi_direction=args.bi_direction,
         device=device
     )
 
-    epoch = 50
+    epoch = 30
     loss_fn = regularization_loss
     optimzer = optim.Adam(model.parameters(), lr=args.lr, weight_decay=args.decay)
     model = model.to(device)
@@ -132,13 +136,13 @@ def main(args, features, labels, adj):
             x1, visit_index, adj_index, indicator, y = x1.to(device), visit_index.to(device), adj_index.to(device), indicator.to(device), y.to(device)
             optimzer.zero_grad()
             w_index = train_W_index_list[idx * args.batch_size : (idx + 1) * args.batch_size]
-            output = model(x1, visit_index, adj_index, w_index, indicator, args.only_dipole)
+            output = model(x1, visit_index, adj_index, w_index, indicator, args.only_dipole, args.p)
             
             loss = loss_fn(output, y, model, adj, args.beta, args.batch_size)
             loss.backward()
 
             optimzer.step()
-            # llprint('\rtraining step: {} / {}'.format(idx, len(train_loader)))
+            llprint('\rtraining step: {} / {}'.format(idx, len(train_loader)))
             total_loss += loss.item()
 
         avg_loss = total_loss / len(train_loader)
@@ -146,7 +150,7 @@ def main(args, features, labels, adj):
 
         # eval:
         macro_auc, micro_auc, precision_mean, recall_mean, f1_mean = \
-            evaluate(model, valid_loader, adj, valid_W_index_list, device, args.only_dipole)
+            evaluate(model, valid_loader, adj, valid_W_index_list, device, args.only_dipole, args.p)
         print(f"\nValid Result:\n"
               f"\nmacro_auc:{macro_auc}, micro_auc:{micro_auc}"
               f"\nprecision_mean:{precision_mean}\nrecall_mean:{recall_mean}\nf1_mean:{f1_mean}")
@@ -156,7 +160,7 @@ def main(args, features, labels, adj):
 
         # test:
         macro_auc, micro_auc, precision_mean, recall_mean, f1_mean = \
-            evaluate(model, test_loader, adj, test_W_index_list, device, args.only_dipole)
+            evaluate(model, test_loader, adj, test_W_index_list, device, args.only_dipole, args.p)
         print(f"\nTest Result:\n"
               f"\nmacro_auc:{macro_auc}, micro_auc:{micro_auc}"
               f"\nprecision_mean:{precision_mean}\nrecall_mean:{recall_mean}\nf1_mean:{f1_mean}")
@@ -169,6 +173,9 @@ def main(args, features, labels, adj):
         # with open(os.path.join(saved_path, epoch_name), "wb") as model_file:
         #     print()
         #     # torch.save(model.state_dict(), model_file)
+        if i > 10:
+            print(f"Nowbest Eval Epoch:{best_eval_epoch}, Nowbest_Macro_auc:{best_eval_macro_auc}")
+            print(f"Nowbest Test Epoch:{best_test_epoch}, Nowbest_Macro_auc:{best_test_macro_auc}")
     print(f"Best Eval Epoch:{best_eval_epoch}, best_Macro_auc:{best_eval_macro_auc}")
     print(f"Best Test Epoch:{best_test_epoch}, best_Macro_auc:{best_test_macro_auc}")
 
@@ -182,9 +189,10 @@ if __name__ == "__main__":
     parser.add_argument("--output_dim", type=int, default=90, help="output_dim (disease_size)")
     parser.add_argument('--bi_direction', action="store_true", default=True, help="bi_direction")
     parser.add_argument('--batch_size', type=int, default=16, help="batch_size")
-    parser.add_argument('--decay', type=float, default=1e-5, help="weight_decay")
-    parser.add_argument('--beta', type=float, default=1e-5, help="KG factor in loss")
-    parser.add_argument('--lr', type=float, default=1e-4, help="learning rate")
+    parser.add_argument('--decay', type=float, default=0.0001, help="weight_decay")
+    parser.add_argument('--beta', type=float, default=0.0001, help="KG factor in loss")
+    parser.add_argument("--p", type=float, default=0.95, help="Proportion of the Left part")
+    parser.add_argument('--lr', type=float, default=0.01, help="learning rate")
 
     parser.add_argument('--only_dipole', action="store_true", default=False, help="use only diploe moudle")
 
@@ -195,20 +203,24 @@ if __name__ == "__main__":
     features, labels = read_data(feature_file='../data/256_data/final_data_256.pkl',
                                  label_file='../data/label_one_hot.pt',
                                  device = torch.device("cuda" if torch.cuda.is_available() else "cpu"))
+    # features, labels = read_data(feature_file='../data/final_data_512.pkl',
+    #                              label_file='../data/label_one_hot.pt',
+    #                              device = torch.device("cuda" if torch.cuda.is_available() else "cpu"))
     
     adj = torch.zeros(size = (2850, 2850))
     with open('../data/adjacent_matrix.pkl', 'rb') as f:
         adj = pickle.load(f)
 
+    main(args, features, labels, adj)
 
     # 调整模型以及超参数:
-    args.only_dipole = True
-    decays = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1]
-    betas = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1]
+    # args.only_dipole = True
+    # decays = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1]
+    # betas = [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1]
     
-    for i in decays:
-        args.decay = i
-        for j in betas:
-            args.beta = j
-            print(f"Now Running decay={i}, beta={j}")
-            main(args, features, labels, adj)
+    # for i in decays:
+    #     args.decay = i
+    #     for j in betas:
+    #         args.beta = j
+    #         print(f"Now Running decay={i}, beta={j}")
+    #         main(args, features, labels, adj)

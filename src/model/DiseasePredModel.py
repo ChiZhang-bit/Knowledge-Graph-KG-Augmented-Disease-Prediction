@@ -7,12 +7,13 @@ from model.PKGAT import GATModel
 
 
 class DiseasePredModel(nn.Module):
-    def __init__(self, dipole_type: str, input_dim, output_dim, hidden_dim, bi_direction=False, device=torch.device("cuda")):
+    def __init__(self, dipole_type: str, input_dim, output_dim, hidden_dim, embed_dim, bi_direction=False, device=torch.device("cuda")):
         super().__init__()
 
         self.input_dim = input_dim
         self.output_dim = output_dim
         self.hidden_dim = hidden_dim
+        self.embed_dim = embed_dim
         self.bi_direction = bi_direction
         self.device = device
         
@@ -53,7 +54,7 @@ class DiseasePredModel(nn.Module):
         self.Wkg = nn.Linear(output_dim, output_dim, bias=False)
         self.pkgat = GATModel(
             nfeat=input_dim,
-            nemb=self.hidden_dim,
+            nemb=self.embed_dim,
             gat_layers=1,
             gat_hid=self.output_dim,
             dropout=0.1,
@@ -63,7 +64,7 @@ class DiseasePredModel(nn.Module):
         self.out_linear = nn.Linear(output_dim, output_dim, bias=False)
         self.out_activation = nn.Sigmoid()
     
-    def forward(self, x1, visit_index, adj_index, w_index, indicator, only_dipole):
+    def forward(self, x1, visit_index, adj_index, w_index, indicator, only_dipole, p):
         """
         x1: (batch_size , 6, 2850)
         visit_index: (batch_size , 6, neighbour_size)
@@ -83,7 +84,7 @@ class DiseasePredModel(nn.Module):
             pkgat_out = self.pkgat(visit_index, adj_index, w_index, indicator)
             kg_out = self.Wkg(pkgat_out)  # (batch_size, output_dim)
 
-            final = lstm_out + kg_out  # (batch_size, output_dim)
+            final = p*lstm_out + (1-p)*kg_out  # (batch_size, output_dim)
             final = self.out_linear(final)  # (batch_size, output_dim)
 
         return self.out_activation(final)
